@@ -1,11 +1,15 @@
 package cwru.edu.hackcwru;
 
 public class Event {
-    String eventName;
-    String eventTime;
-    public Event(String eventName, String eventTime){
+    private String eventName;
+    private String eventTime;
+
+    private String eventDescription;
+
+    public Event(String eventName, String eventTime, String eventDescription) {
         this.eventName = eventName;
         this.eventTime = eventTime;
+        this.eventDescription = eventDescription;
     }
 
     public String getEventName() {
@@ -14,5 +18,13 @@ public class Event {
 
     public String getEventTime() {
         return eventTime;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public String toString(){
+        return eventName + " " + eventTime + " " + eventDescription;
     }
 }
