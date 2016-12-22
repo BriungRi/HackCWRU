@@ -1,6 +1,7 @@
 package cwru.edu.hackcwru;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @BindView(R.id.drawer_list)
-    ListView drawerList;
+//    @BindView(R.id.navigation_view)
+//    NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
 
     @BindView(R.id.event_list)
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, mainToolbar, R.string.app_name, R.string.app_name);
         this.mainToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         this.drawerLayout.addDrawerListener(drawerToggle);
-        this.drawerList.setBackgroundResource(R.color.white);
 
         // Creating custom events
         Event e1 = new Event("Welcome", "Friday 5:00PM - 7:00PM", "Getting unpacked and stuff");
