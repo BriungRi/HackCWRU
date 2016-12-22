@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="list_item_padding">10dp</dimen>
+    <dimen name="list_item_padding">20dp</dimen>
     <dimen name="list_event_name_text_size">20sp</dimen>
     <dimen name="list_event_time_text_size">12sp</dimen>
 

@@ -24,9 +24,6 @@ public class EventDetailFragment extends Fragment{
     @BindView(R.id.event_detail_description)
     TextView eventDetailDescription;
 
-//    @BindView(R.id.main_toolbar)
-//    Toolbar mainToolbar;
-
     public EventDetailFragment(Event event){
         this.event = event;
     }
@@ -39,10 +36,6 @@ public class EventDetailFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.event_detail_fragment, container, false);
         ButterKnife.bind(this, rootView);
-
-
-//        this.mainToolbar.setNavigationIcon(R.drawable.ic_action_back);
-
 
         eventDetailTitle.setText(event.getEventName());
         eventDetailTime.setText(event.getEventTime());

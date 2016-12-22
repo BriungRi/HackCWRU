@@ -5,7 +5,7 @@
 
     <!-- Navigation Drawer -->
     <string name="schedule_title">Schedule</string>
-    <string name="maps_title">Maps</string>
+    <string name="maps_title">Map</string>
     <string name="announcements_title">Announcements</string>
     <string name="countdown_title">Countdown</string>
 

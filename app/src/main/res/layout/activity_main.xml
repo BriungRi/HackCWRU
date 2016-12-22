@@ -31,16 +31,15 @@
                     android:id="@+id/event_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:scrollbars="vertical"
                     tools:listitem="@layout/event_item" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <!-- Keep at bottom so that this overlays -->
             <FrameLayout
                 android:id="@+id/fragment_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
         </FrameLayout>
     </LinearLayout>
 
