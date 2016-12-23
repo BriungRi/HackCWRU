@@ -12,7 +12,7 @@ public class Event {
         this.eventDescription = eventDescription;
     }
 
-    public String getEventName() {
+    public String getEventTitle() {
         return eventName;
     }
 

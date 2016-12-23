@@ -3,6 +3,9 @@
 
     <string name="action_overflow">Overflow</string>
 
+    <string name="session_preferences">cwru.edu.hackcwru.PREFERENCES</string>
+    <string name="saved_events_preference">saved_events</string>
+
     <!-- Navigation Drawer -->
     <string name="schedule_title">Schedule</string>
     <string name="maps_title">Map</string>

@@ -2,8 +2,6 @@ package cwru.edu.hackcwru;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +35,7 @@ public class EventDetailFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.event_detail_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
-        eventDetailTitle.setText(event.getEventName());
+        eventDetailTitle.setText(event.getEventTitle());
         eventDetailTime.setText(event.getEventTime());
         eventDetailDescription.setText(event.getEventDescription());
         return rootView;
