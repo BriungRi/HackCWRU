@@ -3,13 +3,14 @@ package cwru.edu.hackcwru;
 public class Event {
     private String eventName;
     private String eventTime;
-
     private String eventDescription;
+    private int index;
 
-    public Event(String eventName, String eventTime, String eventDescription) {
+    public Event(String eventName, String eventTime, String eventDescription, int index) {
         this.eventName = eventName;
         this.eventTime = eventTime;
         this.eventDescription = eventDescription;
+        this.index = index;
     }
 
     public String getEventTitle() {
@@ -24,7 +25,16 @@ public class Event {
         return eventDescription;
     }
 
-    public String toString(){
+    public int getIndex(){
+        return this.index;
+    }
+
+    public String toString() {
         return eventName + " " + eventTime + " " + eventDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return ((Event) o).getEventTitle().equals(this.getEventTitle());
     }
 }

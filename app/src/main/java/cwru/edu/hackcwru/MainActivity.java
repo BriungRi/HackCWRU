@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -46,8 +47,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView eventList;
     private EventListAdapter eventListAdapter;
     private RecyclerView.LayoutManager eventLayoutManager;
+    private ArrayList<Event> events;
 
     public ArrayList<String> savedEvents;
+
+    @BindView(R.id.save_floating_action_button)
+    FloatingActionButton saveFloatingActionButton;
+    boolean showingSavedItems = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return super.onOptionsItemSelected(item);
             }
         };
+
         this.drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         // Default to schedule
@@ -78,25 +85,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.navigationView.setNavigationItemSelectedListener(this);
 
         // Creating custom events
-        Event e1 = new Event("Welcome", "Friday 5:00PM - 7:00PM", "Getting unpacked and stuff");
-        Event e2 = new Event("Start Hacking", "Friday 7:00PM - ", "Take those computers out and start writing some code!");
-        Event e3 = new Event("Ending Ceremony", "Sunday 3:00PM", "Presentation and Awards");
-        Event[] events = new Event[15];
-        events[0] = e1;
-        events[1] = e2;
-        for (int i = 2; i < events.length - 1; i++) {
-            events[i] = new Event("Cool stuff " + i, "Day time_from - time_to", "Blah blah blah");
+        Event e1 = new Event("Welcome", "Friday 5:00PM - 7:00PM", "Getting unpacked and stuff", 0);
+        Event e2 = new Event("Start Hacking", "Friday 7:00PM - ", "Take those computers out and start writing some code!", 1);
+        Event e3 = new Event("Ending Ceremony", "Sunday 3:00PM", "Presentation and Awards", 13);
+        this.events = new ArrayList<>();
+        events.add(e1);
+        events.add(e2);
+        for (int i = 2; i < 13; i++) {
+            events.add(new Event("Cool stuff " + i, "Day time_from - time_to", "Blah blah blah", i));
         }
-        events[14] = e3;
-
+        events.add(e3);
         // End of custom events
 
         eventList.setHasFixedSize(true);
         eventLayoutManager = new LinearLayoutManager(this);
         eventList.setLayoutManager(eventLayoutManager);
-        eventListAdapter = new EventListAdapter(this, events);
+        eventListAdapter = new EventListAdapter(this, this.events);
         eventList.setAdapter(eventListAdapter);
         eventList.addItemDecoration(new SimpleDividerItemDecoration(this));
+
+        saveFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!showingSavedItems){
+                    saveFloatingActionButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
+                    ArrayList<Event> savedEvents = new ArrayList<>();
+                    for(String s : MainActivity.this.savedEvents){
+                        Event e = MainActivity.this.events.get(MainActivity.this.events.indexOf(new Event(s, "", "", 0)));
+                        savedEvents.add(e);
+                    }
+
+                    eventList.setAdapter(new EventListAdapter(MainActivity.this, savedEvents));
+                }
+                else{
+                    saveFloatingActionButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
+                    eventList.setAdapter(new EventListAdapter(MainActivity.this, MainActivity.this.events));
+                }
+                showingSavedItems = !showingSavedItems;
+            }
+        });
     }
 
     @Override
@@ -182,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    private void loadPreferences(){
+    private void loadPreferences() {
         Log.d(LOG_TAG, "loadPreferences()");
         SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
         Set<String> set = settings.getStringSet(getString(R.string.saved_events_preference), new HashSet<String>());
@@ -191,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LOG_TAG, savedEvents.toString());
     }
 
-    private void savePreferences(){
+    private void savePreferences() {
         SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         Set<String> set = new HashSet<>();
@@ -203,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
-        private Event[] events;
+        private ArrayList<Event> events;
         private MainActivity activity;
 
         // Provide a reference to the views for each data item
@@ -230,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public EventListAdapter(MainActivity activity, Event[] events) {
+        public EventListAdapter(MainActivity activity, ArrayList<Event> events) {
             this.events = events;
             this.activity = activity;
         }
@@ -240,19 +267,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public EventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.event_item, parent, false);
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
+            return new ViewHolder(v);
         }
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final Event event = events[position];
+            final Event event = events.get(position);
             holder.eventName.setText(event.getEventTitle());
             holder.eventTime.setText(event.getEventTime());
             holder.eventDescription.setText(event.getEventDescription());
             holder.saved = savedEvents.contains(event.getEventTitle());
-            if(holder.saved)
+            if (holder.saved)
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
             else
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
@@ -263,14 +289,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     activity.showUpButton(true);
                 }
             });
+
             holder.saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(holder.saved) {
+                    if (holder.saved) {
                         savedEvents.remove(event.getEventTitle());
                         view.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
-                    }
-                    else{
+                    } else {
                         savedEvents.add(event.getEventTitle());
                         view.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
                     }
@@ -282,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
-            return events.length;
+            return events.size();
         }
     }
 
