@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cwru.edu.hackcwru.data.Event;
 
 public class EventDetailFragment extends Fragment{
     private final String LOG_TAG = "EventDetailFragment";

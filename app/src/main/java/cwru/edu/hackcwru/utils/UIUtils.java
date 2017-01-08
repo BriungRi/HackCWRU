@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
-import cwru.edu.hackcwru.MainActivity;
+import cwru.edu.hackcwru.events.EventsActivity;
 
 public class UIUtils {
     private static Toast toast;
@@ -24,13 +24,13 @@ public class UIUtils {
             toast.cancel();
     }
 
-    public static boolean canRecordAudio(MainActivity activity) {
+    public static boolean canRecordAudio(EventsActivity activity) {
         return ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.RECORD_AUDIO)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static boolean isConnected(MainActivity activity) {
+    public static boolean isConnected(EventsActivity activity) {
         ConnectivityManager cm =
                 (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 

@@ -1,4 +1,4 @@
-package cwru.edu.hackcwru;
+package cwru.edu.hackcwru.events;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,12 +27,15 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.utils.FragmentUtils;
 import cwru.edu.hackcwru.utils.Log;
 import cwru.edu.hackcwru.utils.UIUtils;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class EventsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static String LOG_TAG = "Main Activity";
+
     @BindView(R.id.main_toolbar)
     Toolbar mainToolbar;
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     private boolean isToolBarNavigationListenerRegistered = false;
+
 
     @BindView(R.id.event_list)
     RecyclerView eventList;
@@ -59,12 +63,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.events_activity);
         ButterKnife.bind(this);
         loadPreferences();
 
         setSupportActionBar(mainToolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onOptionsItemSelected(MenuItem item) {
-                UIUtils.toast(MainActivity.this, item.getTitle().toString());
+                UIUtils.toast(EventsActivity.this, item.getTitle().toString());
                 return super.onOptionsItemSelected(item);
             }
         };
@@ -110,16 +113,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(!showingSavedItems){
                     saveFloatingActionButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
                     ArrayList<Event> savedEvents = new ArrayList<>();
-                    for(String s : MainActivity.this.savedEvents){
-                        Event e = MainActivity.this.events.get(MainActivity.this.events.indexOf(new Event(s, "", "", 0)));
+                    for(String s : EventsActivity.this.savedEvents){
+                        Event e = EventsActivity.this.events.get(EventsActivity.this.events.indexOf(new Event(s, "", "", 0)));
                         savedEvents.add(e);
                     }
 
-                    eventList.setAdapter(new EventListAdapter(MainActivity.this, savedEvents));
+                    eventList.setAdapter(new EventListAdapter(EventsActivity.this, savedEvents));
                 }
                 else{
                     saveFloatingActionButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
-                    eventList.setAdapter(new EventListAdapter(MainActivity.this, MainActivity.this.events));
+                    eventList.setAdapter(new EventListAdapter(EventsActivity.this, EventsActivity.this.events));
                 }
                 showingSavedItems = !showingSavedItems;
             }
@@ -182,9 +185,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else
             item.setChecked(true);
 
-        // Closing drawer on item click
-        drawerLayout.closeDrawers();
-
         if (item.getItemId() == R.id.item_maps || item.getItemId() == R.id.item_announcements) {
             UIUtils.toast(this, "Currently unavailable.");
             item.setChecked(false);
@@ -197,16 +197,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.item_schedule:
                 onBackPressed();
-                return true;
             case R.id.item_maps:
                 return false;
             case R.id.item_announcements:
                 return false;
             case R.id.item_countdown:
                 FragmentUtils.showCountdownFragment(this);
-                return true;
         }
-        return false;
+
+        drawerLayout.closeDrawers();
+        return true;
     }
 
     private void loadPreferences() {
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
         private ArrayList<Event> events;
-        private MainActivity activity;
+        private EventsActivity activity;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public EventListAdapter(MainActivity activity, ArrayList<Event> events) {
+        public EventListAdapter(EventsActivity activity, ArrayList<Event> events) {
             this.events = events;
             this.activity = activity;
         }

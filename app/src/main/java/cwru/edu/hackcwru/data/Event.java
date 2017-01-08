@@ -1,4 +1,4 @@
-package cwru.edu.hackcwru;
+package cwru.edu.hackcwru.data;
 
 public class Event {
     private String eventName;

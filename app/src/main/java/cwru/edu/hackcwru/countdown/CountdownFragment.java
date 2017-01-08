@@ -1,4 +1,4 @@
-package cwru.edu.hackcwru;
+package cwru.edu.hackcwru.countdown;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cwru.edu.hackcwru.R;
 
 public class CountdownFragment extends Fragment {
     private final String LOG_TAG = "Countdown Fragment";
