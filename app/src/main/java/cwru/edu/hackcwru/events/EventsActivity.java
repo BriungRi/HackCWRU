@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cwru.edu.hackcwru.data.Event;
 import cwru.edu.hackcwru.R;
+import cwru.edu.hackcwru.utils.ActivityUtils;
 import cwru.edu.hackcwru.utils.FragmentUtils;
 import cwru.edu.hackcwru.utils.Log;
 import cwru.edu.hackcwru.utils.UIUtils;
@@ -44,20 +45,8 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
-    private boolean isToolBarNavigationListenerRegistered = false;
 
-
-    @BindView(R.id.event_list)
-    RecyclerView eventList;
-    private EventListAdapter eventListAdapter;
-    private RecyclerView.LayoutManager eventLayoutManager;
-    private ArrayList<Event> events;
-
-    public ArrayList<String> savedEvents;
-
-    @BindView(R.id.save_floating_action_button)
-    FloatingActionButton saveFloatingActionButton;
-    boolean showingSavedItems = false;
+    private EventsPresenter eventsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +54,14 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.events_activity);
         ButterKnife.bind(this);
-        loadPreferences();
 
+        // Setup Toolbar
         setSupportActionBar(mainToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         // Setup menu navigation with toolbar
         this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, mainToolbar, R.string.app_name, R.string.app_name) {
-
             @Override
             public boolean onOptionsItemSelected(MenuItem item) {
                 UIUtils.toast(EventsActivity.this, item.getTitle().toString());
@@ -87,51 +75,17 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        // Creating custom events
-        Event e1 = new Event("Welcome", "Friday 5:00PM - 7:00PM", "Getting unpacked and stuff", 0);
-        Event e2 = new Event("Start Hacking", "Friday 7:00PM - ", "Take those computers out and start writing some code!", 1);
-        Event e3 = new Event("Ending Ceremony", "Sunday 3:00PM", "Presentation and Awards", 13);
-        this.events = new ArrayList<>();
-        events.add(e1);
-        events.add(e2);
-        for (int i = 2; i < 13; i++) {
-            events.add(new Event("Cool stuff " + i, "Day time_from - time_to", "Blah blah blah", i));
+        EventsFragment eventsFragment = (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if(eventsFragment == null) {
+            eventsFragment = EventsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), eventsFragment, R.id.content_frame);
         }
-        events.add(e3);
-        // End of custom events
 
-        eventList.setHasFixedSize(true);
-        eventLayoutManager = new LinearLayoutManager(this);
-        eventList.setLayoutManager(eventLayoutManager);
-        eventListAdapter = new EventListAdapter(this, this.events);
-        eventList.setAdapter(eventListAdapter);
-        eventList.addItemDecoration(new SimpleDividerItemDecoration(this));
-
-        saveFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!showingSavedItems){
-                    saveFloatingActionButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
-                    ArrayList<Event> savedEvents = new ArrayList<>();
-                    for(String s : EventsActivity.this.savedEvents){
-                        Event e = EventsActivity.this.events.get(EventsActivity.this.events.indexOf(new Event(s, "", "", 0)));
-                        savedEvents.add(e);
-                    }
-
-                    eventList.setAdapter(new EventListAdapter(EventsActivity.this, savedEvents));
-                }
-                else{
-                    saveFloatingActionButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
-                    eventList.setAdapter(new EventListAdapter(EventsActivity.this, EventsActivity.this.events));
-                }
-                showingSavedItems = !showingSavedItems;
-            }
-        });
+        eventsPresenter = new EventsPresenter(eventsFragment);
     }
 
     @Override
     protected void onStop() {
-        savePreferences();
         super.onStop();
     }
 
@@ -142,38 +96,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
 
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentUtils.closeEventDetailFragment(this);
-        FragmentUtils.closeCountdownFragment(this);
-        mainToolbar.setTitle(getString(R.string.schedule_title));
-        drawerLayout.closeDrawers();
-        showUpButton(false);
-    }
-
-    public void showUpButton(boolean show) {
-        if (show) {
-            // Replace hamburger with back arrow
-            drawerToggle.setDrawerIndicatorEnabled(false);
-            // Create onClickListener() for back button
-            if (!isToolBarNavigationListenerRegistered) {
-                drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onBackPressed();
-                    }
-                });
-                isToolBarNavigationListenerRegistered = true;
-            }
-        } else {
-            // Replace back arrow with hamburger
-            drawerToggle.setDrawerIndicatorEnabled(true);
-            // Revert to original hamburger onClickListener()
-            drawerToggle.setToolbarNavigationClickListener(null);
-            isToolBarNavigationListenerRegistered = false;
         }
     }
 
@@ -196,147 +118,35 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         //Check to see which item was being clicked and perform appropriate action
         switch (item.getItemId()) {
             case R.id.item_schedule:
-                onBackPressed();
+//                return false;
             case R.id.item_maps:
-                return false;
+//                return false;
             case R.id.item_announcements:
-                return false;
+//                return false;
             case R.id.item_countdown:
-                FragmentUtils.showCountdownFragment(this);
+//                return false;
         }
 
         drawerLayout.closeDrawers();
-        return true;
+        return false;
     }
 
     private void loadPreferences() {
-        Log.d(LOG_TAG, "loadPreferences()");
-        SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
-        Set<String> set = settings.getStringSet(getString(R.string.saved_events_preference), new HashSet<String>());
-        savedEvents = new ArrayList<>();
-        savedEvents.addAll(set);
-        Log.d(LOG_TAG, savedEvents.toString());
+//        Log.d(LOG_TAG, "loadPreferences()");
+//        SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
+//        Set<String> set = settings.getStringSet(getString(R.string.saved_events_preference), new HashSet<String>());
+//        savedEvents = new ArrayList<>();
+//        savedEvents.addAll(set);
+//        Log.d(LOG_TAG, savedEvents.toString());
     }
 
     private void savePreferences() {
-        SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        Set<String> set = new HashSet<>();
-        set.addAll(savedEvents);
-        Log.d(LOG_TAG, set.toString());
-        editor.putStringSet(getString(R.string.saved_events_preference), set);
-        editor.commit();
+//        SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = settings.edit();
+//        Set<String> set = new HashSet<>();
+//        set.addAll(savedEvents);
+//        Log.d(LOG_TAG, set.toString());
+//        editor.putStringSet(getString(R.string.saved_events_preference), set);
+//        editor.commit();
     }
-
-
-    public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
-        private ArrayList<Event> events;
-        private EventsActivity activity;
-
-        // Provide a reference to the views for each data item
-        // Complex data items may need more than one view per item, and
-        // you provide access to all the views for a data item in a view holder
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            // each data item is just a string in this case
-            @BindView(R.id.list_event_name)
-            TextView eventName;
-            @BindView(R.id.list_event_description)
-            TextView eventDescription;
-            @BindView(R.id.list_event_time)
-            TextView eventTime;
-            @BindView(R.id.save_button)
-            ImageView saveButton;
-            private boolean saved;
-            @BindView(R.id.list_item_view)
-            View item;
-
-            public ViewHolder(View v) {
-                super(v);
-                ButterKnife.bind(this, v);
-            }
-        }
-
-        // Provide a suitable constructor (depends on the kind of dataset)
-        public EventListAdapter(EventsActivity activity, ArrayList<Event> events) {
-            this.events = events;
-            this.activity = activity;
-        }
-
-        // Create new views (invoked by the layout manager)
-        @Override
-        public EventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.event_item, parent, false);
-            return new ViewHolder(v);
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final Event event = events.get(position);
-            holder.eventName.setText(event.getEventTitle());
-            holder.eventTime.setText(event.getEventTime());
-            holder.eventDescription.setText(event.getEventDescription());
-            holder.saved = savedEvents.contains(event.getEventTitle());
-            if (holder.saved)
-                holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
-            else
-                holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
-            holder.item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentUtils.showEventDetailFragment(activity, event);
-                    activity.showUpButton(true);
-                }
-            });
-
-            holder.saveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (holder.saved) {
-                        savedEvents.remove(event.getEventTitle());
-                        view.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
-                    } else {
-                        savedEvents.add(event.getEventTitle());
-                        view.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
-                    }
-                    holder.saved = !holder.saved;
-                }
-            });
-        }
-
-        // Return the size of your dataset (invoked by the layout manager)
-        @Override
-        public int getItemCount() {
-            return events.size();
-        }
-    }
-
-    public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
-        private Drawable mDivider;
-
-        public SimpleDividerItemDecoration(Context context) {
-            mDivider = context.getResources().getDrawable(R.drawable.line_divider);
-        }
-
-        @Override
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin;
-                int bottom = top + mDivider.getIntrinsicHeight();
-
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(c);
-            }
-        }
-    }
-
 }

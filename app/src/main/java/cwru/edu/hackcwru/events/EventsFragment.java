@@ -1,11 +1,211 @@
 package cwru.edu.hackcwru.events;
 
-import android.app.Fragment;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class EventsFragment extends Fragment implements EventsContract.View{
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cwru.edu.hackcwru.R;
+import cwru.edu.hackcwru.data.Event;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class EventsFragment extends Fragment implements EventsContract.View {
+
+    EventsContract.Presenter presenter;
+
+    @BindView(R.id.event_list)
+    RecyclerView eventList;
+    private EventListAdapter eventListAdapter;
+
+    EventItemListener eventItemListener = new EventItemListener() {
+        @Override
+        public void onTaskClick(Event clickedEvent) {
+            presenter.openEventDetails(clickedEvent);
+        }
+
+        @Override
+        public void onTaskSave(Event savedEvent) {
+            presenter.saveEvent(savedEvent);
+        }
+    };
+
+    public EventsFragment(){
+        // Empty Constructor
+    }
+
+    public static EventsFragment newInstance() {
+        return new EventsFragment();
+    }
+
     @Override
-    public void setPresenter(EventsContract.Presenter presenter) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        eventListAdapter = new EventListAdapter(new ArrayList(), eventItemListener);
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.events_fragment, container, false);
+        ButterKnife.bind(this, rootView);
+
+        eventList.setHasFixedSize(true);
+        eventList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        eventList.setAdapter(eventListAdapter);
+        eventList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.start();
+    }
+
+    @Override
+    public void setPresenter(@NonNull EventsContract.Presenter presenter) {
+        this.presenter = checkNotNull(presenter);
+    }
+
+    @Override
+    public void showEvents(ArrayList<Event> events) {
+        eventListAdapter.replaceEvents(events);
+    }
+
+    public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
+        private List<Event> events;
+        private EventItemListener eventItemListener;
+
+        // Provide a reference to the views for each data item
+        // Complex data items may need more than one view per item, and
+        // you provide access to all the views for a data item in a view holder
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            // each data item is just a string in this case
+            @BindView(R.id.list_event_name)
+            TextView eventName;
+            @BindView(R.id.list_event_description)
+            TextView eventDescription;
+            @BindView(R.id.list_event_time)
+            TextView eventTime;
+            @BindView(R.id.save_button)
+            ImageView saveButton;
+            private boolean saved;
+            @BindView(R.id.list_item_view)
+            View item;
+
+            public ViewHolder(View v) {
+                super(v);
+                ButterKnife.bind(this, v);
+            }
+        }
+
+        // Provide a suitable constructor (depends on the kind of dataset)
+        public EventListAdapter(List<Event> events, EventItemListener eventItemListener) {
+            setEvents(events);
+            this.eventItemListener = eventItemListener;
+        }
+
+        public void replaceEvents(List<Event> events){
+            setEvents(events);
+            notifyDataSetChanged();
+        }
+
+        private void setEvents(List<Event> events){
+            this.events = checkNotNull(events);
+        }
+
+        // Create new views (invoked by the layout manager)
+        @Override
+        public EventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.event_item, parent, false);
+            return new ViewHolder(v);
+        }
+
+        // Replace the contents of a view (invoked by the layout manager)
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+            final Event event = events.get(position);
+
+            holder.eventName.setText(event.getEventTitle());
+            holder.eventTime.setText(event.getEventTime());
+            holder.eventDescription.setText(event.getEventDescription());
+
+            if (holder.saved)
+                holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
+            else
+                holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
+
+            holder.item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    eventItemListener.onTaskClick(event);
+                }
+            });
+
+            holder.saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    eventItemListener.onTaskSave(event);
+                }
+            });
+        }
+
+        // Return the size of your dataset (invoked by the layout manager)
+        @Override
+        public int getItemCount() {
+            return events.size();
+        }
+    }
+
+    public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+        private Drawable mDivider;
+
+        public SimpleDividerItemDecoration(Context context) {
+            mDivider = context.getResources().getDrawable(R.drawable.line_divider);
+        }
+
+        @Override
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
+        }
+    }
+
+    public interface EventItemListener {
+
+        void onTaskClick(Event clickedEvent);
+
+        void onTaskSave(Event savedEvent);
     }
 }

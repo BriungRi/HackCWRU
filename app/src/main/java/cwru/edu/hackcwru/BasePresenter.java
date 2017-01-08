@@ -1,4 +1,4 @@
-package cwru.edu.hackcwru.utils;
+package cwru.edu.hackcwru;
 
 public interface BasePresenter {
 
