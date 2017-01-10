@@ -70,6 +70,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             }
         };
 
+        this.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
         this.drawerLayout.addDrawerListener(drawerToggle);
 
         // Prevent main content from dimming while drawer is open
