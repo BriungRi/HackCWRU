@@ -1,37 +1,25 @@
 package cwru.edu.hackcwru.events;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cwru.edu.hackcwru.data.Event;
 import cwru.edu.hackcwru.R;
+import cwru.edu.hackcwru.eventdetail.EventDetailFragment;
 import cwru.edu.hackcwru.utils.ActivityUtils;
-import cwru.edu.hackcwru.utils.FragmentUtils;
-import cwru.edu.hackcwru.utils.Log;
 import cwru.edu.hackcwru.utils.UIUtils;
 
 public class EventsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,7 +35,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     ActionBarDrawerToggle drawerToggle;
 
     private EventsPresenter eventsPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -55,33 +42,60 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         setContentView(R.layout.events_activity);
         ButterKnife.bind(this);
 
+        // Get device width/height. Set right drawer width to device width.
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        this.findViewById(R.id.right_drawer)
+                .setLayoutParams(new DrawerLayout.LayoutParams(displaymetrics.widthPixels, displaymetrics.heightPixels, GravityCompat.END));
+
         // Setup Toolbar
         setSupportActionBar(mainToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
 
-        // Setup menu navigation with toolbar
-        this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, mainToolbar, R.string.app_name, R.string.app_name) {
+        // Setup menu navigation with toolbar (This constructor will use the onOptionsItemSelected() method for onClicks()
+        this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name) {
+
             @Override
-            public boolean onOptionsItemSelected(MenuItem item) {
-                UIUtils.toast(EventsActivity.this, item.getTitle().toString());
-                return super.onOptionsItemSelected(item);
+            public void onDrawerOpened(View view) {
+                super.onDrawerOpened(view);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
             }
         };
 
         this.drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-        // Default to schedule
-        navigationView.getMenu().getItem(0).setChecked(true);
+
+        // Prevent main content from dimming while drawer is open
+        this.drawerLayout.setScrimColor(Color.TRANSPARENT);
+        this.drawerToggle.syncState();
+
+        // Default selected item to schedule
+        this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        EventsFragment eventsFragment = (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if(eventsFragment == null) {
+        // Attach Events and EventDetail Fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentById(R.id.content_frame);
+        if (eventsFragment == null) {
             eventsFragment = EventsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), eventsFragment, R.id.content_frame);
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
         }
 
-        eventsPresenter = new EventsPresenter(eventsFragment);
+        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
+        if (eventDetailFragment == null) {
+            eventDetailFragment = EventDetailFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
+        }
+
+        eventsPresenter = new EventsPresenter(eventsFragment, eventDetailFragment);
     }
 
     @Override
@@ -92,8 +106,12 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_overflow:
-
+            case android.R.id.home:
+                if(drawerLayout.isDrawerOpen(GravityCompat.END))
+                    onBackPressed();
+                else
+                    drawerLayout.openDrawer(GravityCompat.START);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -118,17 +136,26 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         //Check to see which item was being clicked and perform appropriate action
         switch (item.getItemId()) {
             case R.id.item_schedule:
-//                return false;
             case R.id.item_maps:
-//                return false;
             case R.id.item_announcements:
-//                return false;
             case R.id.item_countdown:
-//                return false;
         }
 
         drawerLayout.closeDrawers();
         return false;
+    }
+
+    public void showEventDetail() {
+        drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawers();
+        }
+        else
+            super.onBackPressed();
     }
 
     private void loadPreferences() {

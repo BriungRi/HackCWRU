@@ -12,9 +12,11 @@ public interface EventsContract {
 
     interface View extends BaseView<Presenter> {
         void showEvents(ArrayList<Event> events);
+
+        void onRefreshFinish();
     }
 
-    interface Presenter extends BasePresenter{
+    interface Presenter extends BasePresenter {
         void openEventDetails(@NonNull Event event);
 
         void saveEvent(@NonNull Event event);

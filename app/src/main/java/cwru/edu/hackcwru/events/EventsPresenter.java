@@ -5,14 +5,20 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
 import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 
-public class EventsPresenter implements EventsContract.Presenter {
+public class EventsPresenter implements EventsContract.Presenter, EventDetailContract.Presenter {
 
     EventsContract.View eventsView;
 
-    public EventsPresenter(EventsContract.View eventsView){
+    EventDetailContract.View eventDetailView;
+
+    public EventsPresenter(EventsContract.View eventsView, EventDetailContract.View eventDetailView) {
         this.eventsView = eventsView;
+        this.eventDetailView = eventDetailView;
+
         eventsView.setPresenter(this);
+        eventDetailView.setPresenter(this);
     }
 
     @Override
@@ -22,7 +28,7 @@ public class EventsPresenter implements EventsContract.Presenter {
 
     @Override
     public void openEventDetails(@NonNull Event event) {
-
+        eventDetailView.populateEvent(event);
     }
 
     @Override
@@ -46,7 +52,8 @@ public class EventsPresenter implements EventsContract.Presenter {
         processEvents(events);
     }
 
-    private void processEvents(ArrayList<Event> events){
+    private void processEvents(ArrayList<Event> events) {
         eventsView.showEvents(events);
+        eventsView.onRefreshFinish();
     }
 }

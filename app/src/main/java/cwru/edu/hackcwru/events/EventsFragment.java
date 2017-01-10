@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,12 +27,16 @@ import cwru.edu.hackcwru.data.Event;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EventsFragment extends Fragment implements EventsContract.View {
+    private final String LOG_TAG = "EventsFragment";
 
-    EventsContract.Presenter presenter;
+    private EventsContract.Presenter presenter;
 
     @BindView(R.id.event_list)
     RecyclerView eventList;
     private EventListAdapter eventListAdapter;
+
+    @BindView(R.id.refresh_layout)
+    ScrollChildSwipeRefreshLayout swipeRefreshLayout;
 
     EventItemListener eventItemListener = new EventItemListener() {
         @Override
@@ -45,7 +50,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         }
     };
 
-    public EventsFragment(){
+    public EventsFragment() {
         // Empty Constructor
     }
 
@@ -70,6 +75,14 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         eventList.setAdapter(eventListAdapter);
         eventList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
+        swipeRefreshLayout.setScrollUpChild(eventList);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.loadEvents();
+            }
+        });
+
         return rootView;
     }
 
@@ -89,6 +102,21 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         eventListAdapter.replaceEvents(events);
     }
 
+    @Override
+    public void onRefreshFinish() {
+        if(swipeRefreshLayout != null)
+            swipeRefreshLayout.setRefreshing(false);
+        else if(getView() != null){
+            final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
+    }
+
     public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
         private List<Event> events;
         private EventItemListener eventItemListener;
@@ -106,9 +134,9 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             TextView eventTime;
             @BindView(R.id.save_button)
             ImageView saveButton;
-            private boolean saved;
             @BindView(R.id.list_item_view)
             View item;
+            boolean saved;
 
             public ViewHolder(View v) {
                 super(v);
@@ -122,12 +150,12 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             this.eventItemListener = eventItemListener;
         }
 
-        public void replaceEvents(List<Event> events){
+        public void replaceEvents(List<Event> events) {
             setEvents(events);
             notifyDataSetChanged();
         }
 
-        private void setEvents(List<Event> events){
+        private void setEvents(List<Event> events) {
             this.events = checkNotNull(events);
         }
 

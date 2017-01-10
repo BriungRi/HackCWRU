@@ -49,6 +49,21 @@
         </FrameLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/right_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:elevation="1dp"
+        android:fitsSystemWindows="true"
+        android:paddingTop="?attr/actionBarSize">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World" />
+    </FrameLayout>
+
     <!-- The navigation drawer -->
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
