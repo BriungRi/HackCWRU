@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -104,9 +105,9 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
     @Override
     public void onRefreshFinish() {
-        if(swipeRefreshLayout != null)
+        if (swipeRefreshLayout != null)
             swipeRefreshLayout.setRefreshing(false);
-        else if(getView() != null){
+        else if (getView() != null) {
             final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
             swipeRefreshLayout.post(new Runnable() {
                 @Override
@@ -181,19 +182,15 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             else
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
 
-            holder.item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    eventItemListener.onTaskClick(event);
-                }
-            });
+            holder.item.setOnClickListener(view -> {
+                        eventItemListener.onTaskClick(event);
+                    }
+            );
 
-            holder.saveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    eventItemListener.onTaskSave(event);
-                }
-            });
+            holder.saveButton.setOnClickListener(view -> {
+                        eventItemListener.onTaskSave(event);
+                    }
+            );
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -207,7 +204,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         private Drawable mDivider;
 
         public SimpleDividerItemDecoration(Context context) {
-            mDivider = context.getResources().getDrawable(R.drawable.line_divider);
+            mDivider = ResourcesCompat.getDrawable(getResources(), R.drawable.line_divider, null);
         }
 
         @Override
