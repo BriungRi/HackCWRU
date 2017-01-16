@@ -53,9 +53,9 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     @Override
     public void populateEvent(Event event) {
         if (event != null) {
-            eventDetailTitle.setText(event.getEventTitle());
-            eventDetailTime.setText(event.getEventTime());
-            eventDetailDescription.setText(event.getEventDescription());
+            eventDetailTitle.setText(event.getName());
+            eventDetailTime.setText(event.getStartTime() + " - " + event.getEndTime());
+            eventDetailDescription.setText(event.getDescription());
         } else
             throw new NullPointerException();
         EventsActivity activity = (EventsActivity) getActivity();

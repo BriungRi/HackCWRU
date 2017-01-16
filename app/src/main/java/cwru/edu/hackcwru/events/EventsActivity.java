@@ -18,6 +18,7 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cwru.edu.hackcwru.R;
+import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.eventdetail.EventDetailFragment;
 import cwru.edu.hackcwru.utils.ActivityUtils;
 import cwru.edu.hackcwru.utils.UIUtils;
@@ -48,11 +49,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         this.findViewById(R.id.right_drawer)
                 .setLayoutParams(new DrawerLayout.LayoutParams(displaymetrics.widthPixels, displaymetrics.heightPixels, GravityCompat.END));
 
-        // Setup Toolbar
-        setSupportActionBar(mainToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        setupToolbar();
 
         // Setup menu navigation with toolbar (This constructor will use the onOptionsItemSelected() method for onClicks()
         this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name) {
@@ -74,29 +71,14 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         this.drawerLayout.addDrawerListener(drawerToggle);
 
         // Prevent main content from dimming while drawer is open
-        this.drawerLayout.setScrimColor(Color.TRANSPARENT);
+//        this.drawerLayout.setScrimColor(Color.TRANSPARENT);
         this.drawerToggle.syncState();
 
         // Default selected item to schedule
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        // Attach Events and EventDetail Fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentById(R.id.content_frame);
-        if (eventsFragment == null) {
-            eventsFragment = EventsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
-        }
-
-        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
-        if (eventDetailFragment == null) {
-            eventDetailFragment = EventDetailFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
-        }
-
-        eventsPresenter = new EventsPresenter(eventsFragment, eventDetailFragment);
+        attachFragments();
     }
 
     @Override
@@ -157,6 +139,35 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         }
         else
             super.onBackPressed();
+    }
+
+    private void setupToolbar(){
+        setSupportActionBar(mainToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+    }
+
+    private void attachFragments(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentById(R.id.content_frame);
+        if (eventsFragment == null) {
+            eventsFragment = EventsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
+        }
+
+        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
+        if (eventDetailFragment == null) {
+            eventDetailFragment = EventDetailFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
+        }
+
+        initializePresenter(eventsFragment, eventDetailFragment);
+    }
+
+    private void initializePresenter(EventsContract.View eventsFragment, EventDetailContract.View eventDetailFragment){
+        eventsPresenter = new EventsPresenter(eventsFragment, eventDetailFragment);
     }
 
     private void loadPreferences() {

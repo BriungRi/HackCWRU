@@ -1,40 +1,64 @@
 package cwru.edu.hackcwru.data;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class Event {
-    private String eventName;
-    private String eventTime;
-    private String eventDescription;
-    private int index;
 
-    public Event(String eventName, String eventTime, String eventDescription, int index) {
-        this.eventName = eventName;
-        this.eventTime = eventTime;
-        this.eventDescription = eventDescription;
-        this.index = index;
+    @SerializedName("_id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("startTime")
+    @Expose
+    private String startTime;
+    @SerializedName("endTime")
+    @Expose
+    private String endTime;
+    @SerializedName("location")
+    @Expose
+    private String location;
+    @SerializedName("updatedAt")
+    @Expose
+    private String updatedAt;
+
+    public String getId() {
+        return id;
     }
 
-    public String getEventTitle() {
-        return eventName;
+    public String getName() {
+        return name;
     }
 
-    public String getEventTime() {
-        return eventTime;
+    public String getDescription() {
+        return description;
     }
 
-    public String getEventDescription() {
-        return eventDescription;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public int getIndex(){
-        return this.index;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public String toString() {
-        return eventName + " " + eventTime + " " + eventDescription;
+    public String getLocation() {
+        return location;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
     @Override
-    public boolean equals(Object o) {
-        return ((Event) o).getEventTitle().equals(this.getEventTitle());
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -77,12 +77,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         eventList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
         swipeRefreshLayout.setScrollUpChild(eventList);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.loadEvents();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadEvents());
 
         return rootView;
     }
@@ -99,7 +94,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     @Override
-    public void showEvents(ArrayList<Event> events) {
+    public void showEvents(List<Event> events) {
         eventListAdapter.replaceEvents(events);
     }
 
@@ -109,12 +104,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             swipeRefreshLayout.setRefreshing(false);
         else if (getView() != null) {
             final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            });
+            swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
         }
     }
 
@@ -173,9 +163,9 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final Event event = events.get(position);
 
-            holder.eventName.setText(event.getEventTitle());
-            holder.eventTime.setText(event.getEventTime());
-            holder.eventDescription.setText(event.getEventDescription());
+            holder.eventName.setText(event.getName());
+            holder.eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
+            holder.eventDescription.setText(event.getDescription());
 
             if (holder.saved)
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);

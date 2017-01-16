@@ -2,23 +2,42 @@ package cwru.edu.hackcwru.events;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.data.EventsList;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
+import cwru.edu.hackcwru.server.HackCWRUServerCalls;
+import cwru.edu.hackcwru.utils.Log;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EventsPresenter implements EventsContract.Presenter, EventDetailContract.Presenter {
+    private final String LOG_TAG = "EventsPresenter";
 
     EventsContract.View eventsView;
-
     EventDetailContract.View eventDetailView;
+
+    HackCWRUServerCalls hackCWRUServerCalls;
 
     public EventsPresenter(EventsContract.View eventsView, EventDetailContract.View eventDetailView) {
         this.eventsView = eventsView;
         this.eventDetailView = eventDetailView;
-
         eventsView.setPresenter(this);
         eventDetailView.setPresenter(this);
+
+        initializeRetrofit();
+    }
+
+    private void initializeRetrofit(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(HackCWRUServerCalls.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        hackCWRUServerCalls = retrofit.create(HackCWRUServerCalls.class);
     }
 
     @Override
@@ -38,21 +57,23 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     @Override
     public void loadEvents() {
-        // Creating custom events
-        ArrayList<Event> events = new ArrayList<>();
-        Event e1 = new Event("Welcome", "Friday 5:00PM - 7:00PM", "Getting unpacked and stuff", 0);
-        Event e2 = new Event("Start Hacking", "Friday 7:00PM - ", "Take those computers out and start writing some code!", 1);
-        Event e3 = new Event("Ending Ceremony", "Sunday 3:00PM", "Presentation and Awards", 13);
-        events.add(e1);
-        events.add(e2);
-        for (int i = 2; i < 13; i++) {
-            events.add(new Event("Cool stuff " + i, "Day time_from - time_to", "Blah blah blah", i));
-        }
-        events.add(e3);
-        processEvents(events);
+        Call<EventsList> loadEventsCall = hackCWRUServerCalls.getEventsFromServer();
+        loadEventsCall.enqueue(new Callback<EventsList>() {
+            @Override
+            public void onResponse(Call<EventsList> call, Response<EventsList> response) {
+                EventsList eventsResponse = response.body();
+                List<Event> events = eventsResponse.getEvents();
+                processEvents(events);
+            }
+
+            @Override
+            public void onFailure(Call<EventsList> call, Throwable t) {
+                Log.e(LOG_TAG, t.toString());
+            }
+        });
     }
 
-    private void processEvents(ArrayList<Event> events) {
+    private void processEvents(List<Event> events) {
         eventsView.showEvents(events);
         eventsView.onRefreshFinish();
     }

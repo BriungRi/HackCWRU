@@ -25,13 +25,13 @@ task clean(type: Delete) {
 // Define versions in a single place
 ext {
     // Sdk and tools
-    minSdkVersion = 10
-    targetSdkVersion = 24
-    compileSdkVersion = 24
-    buildToolsVersion = '24.0.1'
+    minSdkVersion = 16
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.0'
 
     // App dependencies
-    supportLibraryVersion = '24.2.1'
+    supportLibraryVersion = '25.1.0'
     butterknifeVersion = '8.4.0'
     guavaVersion = '18.0'
     junitVersion = '4.12'
@@ -43,5 +43,7 @@ ext {
     espressoVersion = '2.2.2'
     rxandroidVersion = '1.2.1'
     rxjavaVersion = '1.1.6'
+    retrofitVersion = '2.1.0'
+    gsonVersion = '2.4'
 }
 

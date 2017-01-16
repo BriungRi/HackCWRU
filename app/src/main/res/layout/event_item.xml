@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_item_view"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
@@ -7,53 +7,46 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:gravity="center"
-    android:orientation="horizontal"
     android:paddingBottom="@dimen/list_item_padding_vertical"
     android:paddingLeft="@dimen/list_item_padding_horizontal"
     android:paddingRight="@dimen/list_item_padding_horizontal"
     android:paddingTop="@dimen/list_item_padding_vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/list_event_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+        android:text="Event Name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/list_event_name_text_size"
+        android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/list_event_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|top"
-            android:text="Event Name"
-            android:textColor="@color/black"
-            android:textSize="@dimen/list_event_name_text_size"
-            android:visibility="visible" />
+    <TextView
+        android:id="@+id/list_event_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:ellipsize="end"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:textSize="@dimen/list_event_description_text_size" />
 
-        <TextView
-            android:id="@+id/list_event_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:ellipsize="end"
-            android:maxEms="8"
-            android:maxLines="1"
-            android:textSize="@dimen/list_event_description_text_size" />
+    <TextView
+        android:id="@+id/list_event_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="3dp"
+        android:text="12:00 AM - 1:00AM"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="@dimen/list_event_time_text_size" />
 
-        <TextView
-            android:id="@+id/list_event_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|top"
-            android:layout_marginTop="3dp"
-            android:text="12:00 AM - 1:00AM"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="@dimen/list_event_time_text_size" />
+    <ImageView
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:background="@drawable/ic_bookmark_border_black_24dp" />
 
-        <ImageView
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:background="@drawable/ic_bookmark_border_black_24dp" />
-    </FrameLayout>
-
-</LinearLayout>
+</FrameLayout>
