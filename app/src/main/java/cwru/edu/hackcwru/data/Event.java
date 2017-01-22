@@ -42,11 +42,25 @@ public class Event {
     }
 
     public String getStartTime() {
-        return startTime;
+        return simplifyTime(startTime);
     }
 
     public String getEndTime() {
-        return endTime;
+        return simplifyTime(endTime);
+    }
+
+    private String simplifyTime(String timeToSimplify) {
+        if(timeToSimplify != null){
+            final int dateIndex = 0;
+            final int timeIndex = 1;
+
+            String[] timeParts = timeToSimplify.split(" ");
+            String date = timeParts[dateIndex];
+            String time = timeParts[timeIndex];
+
+            return time.substring(0, time.length() - 3);
+        }
+        return null;
     }
 
     public String getLocation() {

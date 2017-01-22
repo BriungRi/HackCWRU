@@ -12,7 +12,7 @@
     android:paddingRight="@dimen/list_item_padding_horizontal"
     android:paddingTop="@dimen/list_item_padding_vertical">
 
-    <TextView
+    <cwru.edu.hackcwru.ui.OpenSansTextView
         android:id="@+id/list_event_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,17 +22,17 @@
         android:textSize="@dimen/list_event_name_text_size"
         android:visibility="visible" />
 
-    <TextView
+    <cwru.edu.hackcwru.ui.OpenSansTextView
         android:id="@+id/list_event_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         android:ellipsize="end"
-        android:maxEms="8"
+        android:maxEms="10"
         android:maxLines="1"
         android:textSize="@dimen/list_event_description_text_size" />
 
-    <TextView
+    <cwru.edu.hackcwru.ui.OpenSansTextView
         android:id="@+id/list_event_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

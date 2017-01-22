@@ -26,7 +26,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    dexOptions{
+    dexOptions {
         javaMaxHeapSize "4g"
     }
 
@@ -60,9 +60,15 @@ dependencies {
     compile "io.reactivex:rxandroid:$rootProject.rxandroidVersion"
     compile "io.reactivex:rxjava:$rootProject.rxjavaVersion"
 
+//    Firebase
+    compile "com.google.firebase:firebase-messaging:$rootProject.firebaseVersion"
+
 //    Apache
-    compile 'org.apache.commons:commons-lang3:3.4'
+    compile "org.apache.commons:commons-lang3:$rootProject.apacheVersion"
 
 //    Unit Testing
     testCompile "junit:junit:$rootProject.ext.junitVersion"
 }
+
+
+apply plugin: 'com.google.gms.google-services'

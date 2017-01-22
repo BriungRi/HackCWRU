@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "53434998558",
+    "firebase_url": "https://hackcwru-1d1c3.firebaseio.com",
+    "project_id": "hackcwru-1d1c3",
+    "storage_bucket": "hackcwru-1d1c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53434998558:android:1ed7d41aa6b19a04",
+        "android_client_info": {
+          "package_name": "cwru.edu.hackcwru"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "53434998558-605h99mn1vch7f31g44h29msull6vt61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cwru.edu.hackcwru",
+            "certificate_hash": "985F5F674229197CAD3AC9324B43CEC663722765"
+          }
+        },
+        {
+          "client_id": "53434998558-63l7ivq78446e3dmq19um7ci417pcbnc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBvieopkMOximgihCeDlFDAu5pgk-uhGE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53434998558-63l7ivq78446e3dmq19um7ci417pcbnc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,13 @@
 package cwru.edu.hackcwru.server;
 
 import cwru.edu.hackcwru.data.EventsList;
+import cwru.edu.hackcwru.firebase.DeviceTokenResponse;
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface HackCWRUServerCalls {
 
@@ -10,4 +15,10 @@ public interface HackCWRUServerCalls {
 
     @GET("events")
     Call<EventsList> getEventsFromServer();
+
+    @FormUrlEncoded
+    @POST("notifications/register/{deviceToken}")
+    Call<DeviceTokenResponse> registerDevice(@Field("apikey") String apikey,
+                                             @Field("os") String operatingSystem,
+                                             @Path("deviceToken") String deviceToken);
 }

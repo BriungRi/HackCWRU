@@ -19,11 +19,12 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     private final String LOG_TAG = "EventsPresenter";
 
     EventsContract.View eventsView;
+
     EventDetailContract.View eventDetailView;
 
     HackCWRUServerCalls hackCWRUServerCalls;
 
-    public EventsPresenter(EventsContract.View eventsView, EventDetailContract.View eventDetailView) {
+    public EventsPresenter(@NonNull EventsContract.View eventsView, @NonNull EventDetailContract.View eventDetailView) {
         this.eventsView = eventsView;
         this.eventDetailView = eventDetailView;
         eventsView.setPresenter(this);
@@ -71,6 +72,16 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
                 Log.e(LOG_TAG, t.toString());
             }
         });
+    }
+
+    @Override
+    public void showSavedEvents() {
+
+    }
+
+    @Override
+    public void showAllEvents() {
+
     }
 
     private void processEvents(List<Event> events) {

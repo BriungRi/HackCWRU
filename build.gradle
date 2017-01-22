@@ -9,6 +9,7 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
@@ -45,5 +46,7 @@ ext {
     rxjavaVersion = '1.1.6'
     retrofitVersion = '2.1.0'
     gsonVersion = '2.4'
+    apacheVersion = '3.4'
+    firebaseVersion = '10.0.1'
 }
 

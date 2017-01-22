@@ -23,6 +23,10 @@ public interface EventsContract {
         void saveEvent(@NonNull Event event);
 
         void loadEvents();
+
+        void showSavedEvents();
+
+        void showAllEvents();
     }
 
 }

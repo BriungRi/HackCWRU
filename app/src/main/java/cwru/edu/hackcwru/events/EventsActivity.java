@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,14 +18,16 @@ import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.eventdetail.EventDetailFragment;
 import cwru.edu.hackcwru.utils.ActivityUtils;
+import cwru.edu.hackcwru.utils.FragmentUtils;
 import cwru.edu.hackcwru.utils.UIUtils;
 
 public class EventsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static String LOG_TAG = "Main Activity";
+    private final String LOG_TAG = "Main Activity";
 
     @BindView(R.id.main_toolbar)
     Toolbar mainToolbar;
@@ -33,9 +36,20 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     DrawerLayout drawerLayout;
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
-    ActionBarDrawerToggle drawerToggle;
+
+    boolean showingSavedEvents = false;
+
+    @OnClick(R.id.save_floating_action_button)
+    public void showSavedEvents() {
+        if (showingSavedEvents) {
+            eventsPresenter.showAllEvents();
+        } else {
+            eventsPresenter.showSavedEvents();
+        }
+    }
 
     private EventsPresenter eventsPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -52,7 +66,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         setupToolbar();
 
         // Setup menu navigation with toolbar (This constructor will use the onOptionsItemSelected() method for onClicks()
-        this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name) {
 
             @Override
             public void onDrawerOpened(View view) {
@@ -66,19 +80,36 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
                 invalidateOptionsMenu();
             }
         };
+        drawerToggle.syncState();
 
+        // Prevent swiping from right
         this.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
         this.drawerLayout.addDrawerListener(drawerToggle);
 
         // Prevent main content from dimming while drawer is open
-//        this.drawerLayout.setScrimColor(Color.TRANSPARENT);
-        this.drawerToggle.syncState();
+        this.drawerLayout.setScrimColor(Color.TRANSPARENT);
 
+//        drawerToggle.syncState();
         // Default selected item to schedule
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        attachFragments();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        Fragment eventsFragment = fragmentManager.findFragmentById(R.id.content_frame);
+        if (eventsFragment == null || !(eventsFragment instanceof EventsFragment)) {
+            eventsFragment = EventsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
+        }
+
+        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
+        if (eventDetailFragment == null) {
+            eventDetailFragment = EventDetailFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
+        }
+
+        eventsPresenter = new EventsPresenter((EventsFragment)eventsFragment, eventDetailFragment);
     }
 
     @Override
@@ -90,7 +121,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(drawerLayout.isDrawerOpen(GravityCompat.END))
+                if (drawerLayout.isDrawerOpen(GravityCompat.END))
                     onBackPressed();
                 else
                     drawerLayout.openDrawer(GravityCompat.START);
@@ -102,11 +133,9 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Checking if the item is in checked state or not, if not make it in checked state
+        // Don't do anything if this is the current item
         if (item.isChecked())
-            item.setChecked(false);
-        else
-            item.setChecked(true);
+            return true;
 
         if (item.getItemId() == R.id.item_maps || item.getItemId() == R.id.item_announcements) {
             UIUtils.toast(this, "Currently unavailable.");
@@ -116,58 +145,44 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
 
         mainToolbar.setTitle(item.getTitle());
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
         //Check to see which item was being clicked and perform appropriate action
         switch (item.getItemId()) {
             case R.id.item_schedule:
+                // TODO: FragmentUtil.showEventsFragment()
+                FragmentUtils.closeAllOverlayElements(EventsActivity.this);
+                break;
             case R.id.item_maps:
             case R.id.item_announcements:
             case R.id.item_countdown:
+                FragmentUtils.showCountdownFragment(EventsActivity.this);
+                break;
         }
 
         drawerLayout.closeDrawers();
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawers();
+        } else
+            super.onBackPressed();
     }
 
     public void showEventDetail() {
         drawerLayout.openDrawer(GravityCompat.END);
     }
 
-    @Override
-    public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(GravityCompat.END)) {
-            drawerLayout.closeDrawers();
-        }
-        else
-            super.onBackPressed();
-    }
-
-    private void setupToolbar(){
+    private void setupToolbar() {
         setSupportActionBar(mainToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-    }
-
-    private void attachFragments(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentById(R.id.content_frame);
-        if (eventsFragment == null) {
-            eventsFragment = EventsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
         }
-
-        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
-        if (eventDetailFragment == null) {
-            eventDetailFragment = EventDetailFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
-        }
-
-        initializePresenter(eventsFragment, eventDetailFragment);
-    }
-
-    private void initializePresenter(EventsContract.View eventsFragment, EventDetailContract.View eventDetailFragment){
-        eventsPresenter = new EventsPresenter(eventsFragment, eventDetailFragment);
     }
 
     private void loadPreferences() {
