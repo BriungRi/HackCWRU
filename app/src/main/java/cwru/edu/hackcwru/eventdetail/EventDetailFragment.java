@@ -54,7 +54,8 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     public void populateEvent(Event event) {
         if (event != null) {
             eventDetailTitle.setText(event.getName());
-            eventDetailTime.setText(event.getStartTime() + " - " + event.getEndTime());
+            // TODO: Prettify the times
+            eventDetailTime.setText(event.getStartDateTime() + " - " + event.getEndDateTime());
             eventDetailDescription.setText(event.getDescription());
         } else
             throw new NullPointerException();
