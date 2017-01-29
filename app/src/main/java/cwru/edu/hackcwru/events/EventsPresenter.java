@@ -2,6 +2,7 @@ package cwru.edu.hackcwru.events;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cwru.edu.hackcwru.data.Event;
@@ -24,6 +25,9 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     HackCWRUServerCalls hackCWRUServerCalls;
 
+    List<Event> allEvents;
+    List<Event> savedEvents;
+
     public EventsPresenter(@NonNull EventsContract.View eventsView, @NonNull EventDetailContract.View eventDetailView) {
         this.eventsView = eventsView;
         this.eventDetailView = eventDetailView;
@@ -31,6 +35,8 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
         eventDetailView.setPresenter(this);
 
         initializeRetrofit();
+
+        savedEvents = new ArrayList<>();
     }
 
     private void initializeRetrofit(){
@@ -53,7 +59,14 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     @Override
     public void saveEvent(@NonNull Event event) {
-
+        if(event.isSaved()){
+            event.setSaved(false);
+            savedEvents.remove(event);
+        }
+        else{
+            event.setSaved(true);
+            savedEvents.add(event);
+        }
     }
 
     @Override
@@ -62,9 +75,11 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
         loadEventsCall.enqueue(new Callback<EventsList>() {
             @Override
             public void onResponse(Call<EventsList> call, Response<EventsList> response) {
+                // TODO: Perform data check with server and current
                 EventsList eventsResponse = response.body();
-                List<Event> events = eventsResponse.getEvents();
-                processEvents(events);
+                Log.d(LOG_TAG, eventsResponse.toString());
+                allEvents = eventsResponse.getEvents();
+                showAllEvents();
             }
 
             @Override
@@ -76,12 +91,12 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     @Override
     public void showSavedEvents() {
-
+        processEvents(savedEvents);
     }
 
     @Override
     public void showAllEvents() {
-
+        processEvents(allEvents);
     }
 
     private void processEvents(List<Event> events) {

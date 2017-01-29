@@ -164,20 +164,24 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             final Event event = events.get(position);
 
             holder.eventName.setText(event.getName());
-            holder.eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
+            holder.eventTime.setText(event.getDateTimeToDisplay());
             holder.eventDescription.setText(event.getDescription());
 
-            if (holder.saved)
+            if (event.isSaved()) {
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
-            else
+            } else {
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
+            }
 
-            holder.item.setOnClickListener(view -> {
-                        eventItemListener.onTaskClick(event);
-                    }
+            holder.item.setOnClickListener(view -> eventItemListener.onTaskClick(event)
             );
 
             holder.saveButton.setOnClickListener(view -> {
+                        if (event.isSaved()) {
+                            holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
+                        } else {
+                            holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
+                        }
                         eventItemListener.onTaskSave(event);
                     }
             );

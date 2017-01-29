@@ -38,6 +38,8 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
         View rootView = inflater.inflate(R.layout.countdown_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
+        displayCountdown();
+
         return rootView;
     }
 

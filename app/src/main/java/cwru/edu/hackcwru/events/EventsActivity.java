@@ -3,6 +3,7 @@ package cwru.edu.hackcwru.events;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,11 +41,19 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     boolean showingSavedEvents = false;
 
     @OnClick(R.id.save_floating_action_button)
-    public void showSavedEvents() {
-        if (showingSavedEvents) {
-            eventsPresenter.showAllEvents();
-        } else {
-            eventsPresenter.showSavedEvents();
+    public void showSavedEvents(FloatingActionButton showBookmarkedItemsButton) {
+        if (eventsPresenter != null) {
+            showBookmarkedItemsButton.setEnabled(false);
+            if (showingSavedEvents) {
+                eventsPresenter.showAllEvents();
+                showBookmarkedItemsButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
+            } else {
+                eventsPresenter.showSavedEvents();
+                showBookmarkedItemsButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
+            }
+
+            showBookmarkedItemsButton.setEnabled(true);
+            showingSavedEvents = !showingSavedEvents;
         }
     }
 
@@ -94,22 +103,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Fragment eventsFragment = fragmentManager.findFragmentById(R.id.content_frame);
-        if (eventsFragment == null || !(eventsFragment instanceof EventsFragment)) {
-            eventsFragment = EventsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
-        }
-
-        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
-        if (eventDetailFragment == null) {
-            eventDetailFragment = EventDetailFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
-        }
-
-        eventsPresenter = new EventsPresenter((EventsFragment)eventsFragment, eventDetailFragment);
+        attachFragments();
     }
 
     @Override
@@ -150,7 +144,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         //Check to see which item was being clicked and perform appropriate action
         switch (item.getItemId()) {
             case R.id.item_schedule:
-                // TODO: FragmentUtil.showEventsFragment()
+                attachFragments();
                 FragmentUtils.closeAllOverlayElements(EventsActivity.this);
                 break;
             case R.id.item_maps:
@@ -183,6 +177,24 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+    }
+
+    private void attachFragments(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        Fragment eventsFragment = fragmentManager.findFragmentById(R.id.content_frame);
+        if (eventsFragment == null || !(eventsFragment instanceof EventsFragment)) {
+            eventsFragment = EventsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventsFragment, R.id.content_frame);
+        }
+
+        EventDetailFragment eventDetailFragment = (EventDetailFragment) fragmentManager.findFragmentById(R.id.right_drawer);
+        if (eventDetailFragment == null) {
+            eventDetailFragment = EventDetailFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
+        }
+
+        eventsPresenter = new EventsPresenter((EventsFragment) eventsFragment, eventDetailFragment);
     }
 
     private void loadPreferences() {
