@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,8 +23,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout;
+import cwru.edu.hackcwru.utils.Log;
+import cwru.edu.hackcwru.utils.UIUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,6 +44,17 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     @BindView(R.id.refresh_layout)
     ScrollChildSwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.no_events_text)
+    TextView noEventsTextView;
+
+    @BindView(R.id.save_floating_action_button)
+    FloatingActionButton showBookMarkedItemsButton;
+
+    @OnClick(R.id.save_floating_action_button)
+    public void showSavedEvents() {
+        presenter.bookmarkButtonPerformClick();
+    }
+
     EventItemListener eventItemListener = new EventItemListener() {
         @Override
         public void onTaskClick(Event clickedEvent) {
@@ -47,6 +63,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
         @Override
         public void onTaskSave(Event savedEvent) {
+            Log.d(LOG_TAG, savedEvent.getId());
             presenter.saveEvent(savedEvent);
         }
     };
@@ -62,7 +79,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventListAdapter = new EventListAdapter(new ArrayList(), eventItemListener);
+        eventListAdapter = new EventListAdapter(new ArrayList<>(), eventItemListener);
     }
 
     @Nullable
@@ -108,6 +125,28 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         }
     }
 
+    @Override
+    public void showNoEventsText() {
+        noEventsTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoEventsText() {
+        noEventsTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showOnEventSavedSnackback(String message) {
+        // TODO: Fix Floating Action Button Problem
+//        UIUtils.showSnackBar(showBookMarkedItemsButton, message);
+        UIUtils.toast(getActivity(), message);
+    }
+
+    @Override
+    public void updateBookmarkButtonBackgroundResource(int reosurceId) {
+        showBookMarkedItemsButton.setImageResource(reosurceId);
+    }
+
     public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
         private List<Event> events;
         private EventItemListener eventItemListener;
@@ -127,7 +166,6 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             ImageView saveButton;
             @BindView(R.id.list_item_view)
             View item;
-            boolean saved;
 
             public ViewHolder(View v) {
                 super(v);
@@ -135,7 +173,6 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             }
         }
 
-        // Provide a suitable constructor (depends on the kind of dataset)
         public EventListAdapter(List<Event> events, EventItemListener eventItemListener) {
             setEvents(events);
             this.eventItemListener = eventItemListener;
@@ -150,7 +187,6 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             this.events = checkNotNull(events);
         }
 
-        // Create new views (invoked by the layout manager)
         @Override
         public EventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
@@ -158,7 +194,6 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             return new ViewHolder(v);
         }
 
-        // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final Event event = events.get(position);
@@ -187,7 +222,6 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             );
         }
 
-        // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
             return events.size();

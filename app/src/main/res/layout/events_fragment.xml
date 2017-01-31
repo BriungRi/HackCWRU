@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cwru.edu.hackcwru.events.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/event_list"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/event_item" />
+        android:layout_height="match_parent">
 
-</cwru.edu.hackcwru.events.ScrollChildSwipeRefreshLayout>
+        <cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/event_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/event_item" />
+
+        </cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/save_floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_bookmark_border_white_24dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:layout_anchor="@id/refresh_layout"
+            app:layout_anchorGravity="bottom|right|end"
+            app:useCompatPadding="true" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <cwru.edu.hackcwru.ui.OpenSansTextView
+        android:id="@+id/no_events_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="@dimen/no_events_view_padding"
+        android:text="@string/no_events_text"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone" />
+</FrameLayout>

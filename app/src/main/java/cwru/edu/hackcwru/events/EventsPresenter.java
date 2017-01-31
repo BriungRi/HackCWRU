@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.data.Event;
 import cwru.edu.hackcwru.data.EventsList;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
@@ -27,6 +28,8 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     List<Event> allEvents;
     List<Event> savedEvents;
+
+    boolean showingSavedEvents = false;
 
     public EventsPresenter(@NonNull EventsContract.View eventsView, @NonNull EventDetailContract.View eventDetailView) {
         this.eventsView = eventsView;
@@ -59,14 +62,19 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     @Override
     public void saveEvent(@NonNull Event event) {
+        String snackBarMessage;
         if(event.isSaved()){
             event.setSaved(false);
             savedEvents.remove(event);
+            snackBarMessage = "Event unsaved.";
         }
         else{
             event.setSaved(true);
             savedEvents.add(event);
+            snackBarMessage = "Event saved.";
         }
+
+        eventsView.showOnEventSavedSnackback(snackBarMessage);
     }
 
     @Override
@@ -90,16 +98,37 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     }
 
     @Override
+    public void bookmarkButtonPerformClick() {
+        if(showingSavedEvents){
+            eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_border_white_24dp);
+            showAllEvents();
+        }
+        else{
+            eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_white_24dp);
+            showSavedEvents();
+        }
+        showingSavedEvents = !showingSavedEvents;
+    }
+
+    @Override
     public void showSavedEvents() {
+        eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_white_24dp);
         processEvents(savedEvents);
     }
 
     @Override
     public void showAllEvents() {
+        eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_border_white_24dp);
         processEvents(allEvents);
     }
 
     private void processEvents(List<Event> events) {
+        if(events.size() == 0) {
+            eventsView.showNoEventsText();
+        }
+        else {
+            eventsView.hideNoEventsText();
+        }
         eventsView.showEvents(events);
         eventsView.onRefreshFinish();
     }

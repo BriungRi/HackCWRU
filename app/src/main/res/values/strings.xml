@@ -7,6 +7,9 @@
     <string name="session_preferences">cwru.edu.hackcwru.PREFERENCES</string>
     <string name="saved_events_preference">saved_events</string>
 
+    <string name="no_events_text">There are no events here :/\nTry clicking the bookmark button on the bottom right.</string>
+    <string name="no_announcements_text">There are no announcements here :|</string>
+
     <!-- Navigation Drawer -->
     <string name="schedule_title">Schedule</string>
     <string name="maps_title">Map</string>

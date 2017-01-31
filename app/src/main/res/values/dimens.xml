@@ -9,6 +9,8 @@
     <dimen name="list_event_description_text_size">14sp</dimen>
     <dimen name="list_event_time_text_size">12sp</dimen>
 
+    <dimen name="no_events_view_padding">30dp</dimen>
+
     <dimen name="event_detail_title_text_size">50sp</dimen>
     <dimen name="event_detail_description_text_size">25sp</dimen>
 

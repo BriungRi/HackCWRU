@@ -1,5 +1,6 @@
 package cwru.edu.hackcwru.server;
 
+import cwru.edu.hackcwru.data.AnnouncementsList;
 import cwru.edu.hackcwru.data.EventsList;
 import cwru.edu.hackcwru.firebase.DeviceTokenResponse;
 import retrofit2.Call;
@@ -15,6 +16,9 @@ public interface HackCWRUServerCalls {
 
     @GET("events")
     Call<EventsList> getEventsFromServer();
+
+    @GET("announcements")
+    Call<AnnouncementsList> getAnnouncementsFromServer();
 
     @FormUrlEncoded
     @POST("notifications/register/{deviceToken}")

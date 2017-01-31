@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cwru.edu.hackcwru.events;
+package cwru.edu.hackcwru.ui;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

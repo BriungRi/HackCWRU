@@ -1,16 +1,16 @@
 package cwru.edu.hackcwru.utils;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.content.ContextCompat;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.Toast;
 
 import cwru.edu.hackcwru.events.EventsActivity;
 
 public class UIUtils {
+    private static final String LOG_TAG = "UIUtils";
     private static Toast toast;
 
     public static void toast(Context context, String message) {
@@ -24,10 +24,11 @@ public class UIUtils {
             toast.cancel();
     }
 
-    public static boolean canRecordAudio(EventsActivity activity) {
-        return ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED;
+    private static Snackbar snackbar;
+    public static void showSnackBar(View view, String message){
+        snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+        snackbar.dismiss();
     }
 
     public static boolean isConnected(EventsActivity activity) {

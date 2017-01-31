@@ -3,7 +3,6 @@ package cwru.edu.hackcwru.events;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,9 +18,7 @@ import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cwru.edu.hackcwru.R;
-import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.eventdetail.EventDetailFragment;
 import cwru.edu.hackcwru.utils.ActivityUtils;
 import cwru.edu.hackcwru.utils.FragmentUtils;
@@ -37,25 +34,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     DrawerLayout drawerLayout;
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
-
-    boolean showingSavedEvents = false;
-
-    @OnClick(R.id.save_floating_action_button)
-    public void showSavedEvents(FloatingActionButton showBookmarkedItemsButton) {
-        if (eventsPresenter != null) {
-            showBookmarkedItemsButton.setEnabled(false);
-            if (showingSavedEvents) {
-                eventsPresenter.showAllEvents();
-                showBookmarkedItemsButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
-            } else {
-                eventsPresenter.showSavedEvents();
-                showBookmarkedItemsButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
-            }
-
-            showBookmarkedItemsButton.setEnabled(true);
-            showingSavedEvents = !showingSavedEvents;
-        }
-    }
 
     private EventsPresenter eventsPresenter;
 
@@ -131,7 +109,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         if (item.isChecked())
             return true;
 
-        if (item.getItemId() == R.id.item_maps || item.getItemId() == R.id.item_announcements) {
+        if (item.getItemId() == R.id.item_maps) {
             UIUtils.toast(this, "Currently unavailable.");
             item.setChecked(false);
             return false;
@@ -139,16 +117,17 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
 
         mainToolbar.setTitle(item.getTitle());
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        //Check to see which item was being clicked and perform appropriate action
+        // TODO: Figure out a way to remove duplicate closeALlOverlayElements duplicate code
         switch (item.getItemId()) {
             case R.id.item_schedule:
                 attachFragments();
                 FragmentUtils.closeAllOverlayElements(EventsActivity.this);
                 break;
             case R.id.item_maps:
+                break;
             case R.id.item_announcements:
+                FragmentUtils.showAnnouncementsFragment(EventsActivity.this);
+                break;
             case R.id.item_countdown:
                 FragmentUtils.showCountdownFragment(EventsActivity.this);
                 break;
@@ -195,24 +174,5 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         }
 
         eventsPresenter = new EventsPresenter((EventsFragment) eventsFragment, eventDetailFragment);
-    }
-
-    private void loadPreferences() {
-//        Log.d(LOG_TAG, "loadPreferences()");
-//        SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
-//        Set<String> set = settings.getStringSet(getString(R.string.saved_events_preference), new HashSet<String>());
-//        savedEvents = new ArrayList<>();
-//        savedEvents.addAll(set);
-//        Log.d(LOG_TAG, savedEvents.toString());
-    }
-
-    private void savePreferences() {
-//        SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.session_preferences), Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = settings.edit();
-//        Set<String> set = new HashSet<>();
-//        set.addAll(savedEvents);
-//        Log.d(LOG_TAG, set.toString());
-//        editor.putStringSet(getString(R.string.saved_events_preference), set);
-//        editor.commit();
     }
 }

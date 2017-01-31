@@ -2,7 +2,6 @@ package cwru.edu.hackcwru.events;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cwru.edu.hackcwru.BasePresenter;
@@ -15,6 +14,14 @@ public interface EventsContract {
         void showEvents(List<Event> events);
 
         void onRefreshFinish();
+
+        void showNoEventsText();
+
+        void hideNoEventsText();
+
+        void showOnEventSavedSnackback(String message);
+
+        void updateBookmarkButtonBackgroundResource(int reosurceId);
     }
 
     interface Presenter extends BasePresenter {
@@ -23,6 +30,8 @@ public interface EventsContract {
         void saveEvent(@NonNull Event event);
 
         void loadEvents();
+
+        void bookmarkButtonPerformClick();
 
         void showSavedEvents();
 
