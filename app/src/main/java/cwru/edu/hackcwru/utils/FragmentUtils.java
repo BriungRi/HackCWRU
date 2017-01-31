@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import cwru.edu.hackcwru.R;
+import cwru.edu.hackcwru.announcements.AnnouncementsFragment;
 import cwru.edu.hackcwru.countdown.CountdownFragment;
 import cwru.edu.hackcwru.events.EventsActivity;
 import cwru.edu.hackcwru.events.EventsFragment;
@@ -40,6 +41,7 @@ public class FragmentUtils {
 
     public static void closeAllOverlayElements(EventsActivity activity){
         closeCountdownFragment(activity);
+        closeAnnouncementsFragment(activity);
     }
 
     private static CountdownFragment countdownFragment;
@@ -66,5 +68,18 @@ public class FragmentUtils {
     public static void closeEventsFragment(EventsActivity activity) {
         closeOverlayElement(activity, eventsFragment);
         eventsFragment = null;
+    }
+
+    private static AnnouncementsFragment announcementsFragment;
+    public static void showAnnouncementsFragment(EventsActivity activity){
+        if(announcementsFragment == null){
+            announcementsFragment = AnnouncementsFragment.newInstance();
+            showOverlayElement(activity, announcementsFragment);
+        }
+    }
+
+    private static void closeAnnouncementsFragment(EventsActivity activity){
+        closeOverlayElement(activity, announcementsFragment);
+        announcementsFragment = null;
     }
 }

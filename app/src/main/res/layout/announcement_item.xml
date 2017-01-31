@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item_view"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:gravity="center"
+    android:paddingBottom="@dimen/list_item_padding_vertical"
+    android:paddingLeft="@dimen/list_item_padding_horizontal"
+    android:paddingRight="@dimen/list_item_padding_horizontal"
+    android:paddingTop="@dimen/list_item_padding_vertical">
+
+    <cwru.edu.hackcwru.ui.OpenSansTextView
+        android:id="@+id/list_announcement_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+        android:text="Title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/list_event_name_text_size"
+        android:visibility="visible" />
+
+    <cwru.edu.hackcwru.ui.OpenSansTextView
+        android:id="@+id/list_announcement_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:ellipsize="end"
+        android:maxEms="10"
+        android:maxLines="1"
+        android:textSize="@dimen/list_event_description_text_size" />
+
+    <cwru.edu.hackcwru.ui.OpenSansTextView
+        android:id="@+id/list_announcement_updatedAt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="3dp"
+        android:text="12:00 AM - 1:00AM"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="@dimen/list_event_time_text_size" />
+
+</FrameLayout>
