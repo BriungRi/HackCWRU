@@ -33,7 +33,9 @@ public class FirebaseService extends FirebaseInstanceIdService {
             @Override
             public void onResponse(Call<DeviceTokenResponse> call, Response<DeviceTokenResponse> response) {
                 DeviceTokenResponse deviceTokenResponse = response.body();
-                Log.d(LOG_TAG, deviceTokenResponse.toString());
+                if(deviceTokenResponse!=null) {
+                    Log.d(LOG_TAG, deviceTokenResponse.toString());
+                }
             }
 
             @Override
