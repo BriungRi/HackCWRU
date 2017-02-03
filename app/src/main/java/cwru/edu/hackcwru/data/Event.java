@@ -90,7 +90,13 @@ public class Event {
 
             String[] timeParts = dateTime.split(" ");
             String time = timeParts[timeIndex];
-            return time.substring(0, time.length() - 3);
+            //return time.substring(0, time.length() - 6);
+            String standardTime = (time.substring (0, time.length() - 6));
+            int finalTime = Integer.parseInt(standardTime);
+            if (finalTime > 12)
+                return Integer.toString(finalTime - 12) + "PM";
+            return Integer.toString(finalTime) + "AM";
+
         }
         return null;
     }

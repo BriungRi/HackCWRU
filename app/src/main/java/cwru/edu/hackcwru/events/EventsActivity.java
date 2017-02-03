@@ -109,12 +109,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         if (item.isChecked())
             return true;
 
-        if (item.getItemId() == R.id.item_maps) {
-            UIUtils.toast(this, "Currently unavailable.");
-            item.setChecked(false);
-            return false;
-        }
-
         mainToolbar.setTitle(item.getTitle());
 
         // TODO: Figure out a way to remove duplicate closeALlOverlayElements duplicate code
@@ -124,6 +118,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
                 FragmentUtils.closeAllOverlayElements(EventsActivity.this);
                 break;
             case R.id.item_maps:
+                FragmentUtils.showMapFragment(EventsActivity.this);
                 break;
             case R.id.item_announcements:
                 FragmentUtils.showAnnouncementsFragment(EventsActivity.this);

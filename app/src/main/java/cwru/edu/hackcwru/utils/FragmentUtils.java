@@ -10,8 +10,12 @@ import cwru.edu.hackcwru.announcements.AnnouncementsFragment;
 import cwru.edu.hackcwru.countdown.CountdownFragment;
 import cwru.edu.hackcwru.events.EventsActivity;
 import cwru.edu.hackcwru.events.EventsFragment;
+import cwru.edu.hackcwru.map.MapFragment;
+
 
 public class FragmentUtils {
+
+    private final String LOG_TAG = "FragmentUtils";
 
     private static void showOverlayElement(FragmentActivity activity, Fragment fragment){
         showOverlayElement(activity, fragment, android.R.anim.fade_in, android.R.anim.fade_out);
@@ -41,6 +45,7 @@ public class FragmentUtils {
 
     public static void closeAllOverlayElements(EventsActivity activity){
         closeCountdownFragment(activity);
+        closeMapFragment(activity);
         closeAnnouncementsFragment(activity);
     }
 
@@ -55,6 +60,20 @@ public class FragmentUtils {
     public static void closeCountdownFragment(EventsActivity activity) {
         closeOverlayElement(activity, countdownFragment);
         countdownFragment = null;
+    }
+
+    private static MapFragment mapFragment;
+    public static void showMapFragment(EventsActivity activity) {
+        Log.d("log", "There is a problem here.");
+        if (mapFragment == null) {
+            mapFragment = mapFragment.newInstance();
+            showOverlayElement(activity, mapFragment);
+        }
+    }
+
+    public static void closeMapFragment(EventsActivity activity) {
+        closeOverlayElement(activity, mapFragment);
+        mapFragment = null;
     }
 
     private static EventsFragment eventsFragment;
