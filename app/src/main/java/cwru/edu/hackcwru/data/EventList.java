@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
-public class EventsList {
+public class EventList {
     @SerializedName("events")
     @Expose
     private List<Event> events = null;

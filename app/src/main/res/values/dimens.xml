@@ -3,6 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- Launch Screen Dimensions -->
+    <dimen name="splash_logo_left_right">150dp</dimen>
+
     <dimen name="list_item_padding_vertical">10dp</dimen>
     <dimen name="list_item_padding_horizontal">20dp</dimen>
     <dimen name="list_event_name_text_size">20sp</dimen>

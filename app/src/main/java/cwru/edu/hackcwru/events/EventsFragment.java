@@ -79,7 +79,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventListAdapter = new EventListAdapter(new ArrayList<>(), eventItemListener);
+        eventListAdapter = new EventListAdapter(new ArrayList<Event>(), eventItemListener);
     }
 
     @Nullable
@@ -94,7 +94,12 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         eventList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
         swipeRefreshLayout.setScrollUpChild(eventList);
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadEvents());
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.loadEvents();
+            }
+        });
 
         return rootView;
     }
@@ -121,7 +126,12 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             swipeRefreshLayout.setRefreshing(false);
         else if (getView() != null) {
             final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
-            swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
         }
     }
 
@@ -208,18 +218,25 @@ public class EventsFragment extends Fragment implements EventsContract.View {
                 holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
             }
 
-            holder.item.setOnClickListener(view -> eventItemListener.onTaskClick(event)
+            holder.item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    eventItemListener.onTaskClick(event);
+                }
+            }
             );
 
-            holder.saveButton.setOnClickListener(view -> {
-                        if (event.isSaved()) {
-                            holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
-                        } else {
-                            holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
-                        }
-                        eventItemListener.onTaskSave(event);
+            holder.saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (event.isSaved()) {
+                        holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
+                    } else {
+                        holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
                     }
-            );
+                    eventItemListener.onTaskSave(event);
+                }
+            });
         }
 
         @Override
@@ -228,7 +245,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         }
     }
 
-    public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+    private class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
         private Drawable mDivider;
 
         public SimpleDividerItemDecoration(Context context) {

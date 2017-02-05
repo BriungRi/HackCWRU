@@ -57,7 +57,7 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
     public void displayCountdown() {
         
         long currentTime=360000;
-        long nextEventStartTime=720000;
+        final long nextEventStartTime=720000;
         final CountDownTimer countDownTimer = new CountDownTimer(nextEventStartTime-currentTime, 1000) {
             @Override
             public void onTick(long l) {

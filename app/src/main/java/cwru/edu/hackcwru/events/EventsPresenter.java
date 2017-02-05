@@ -1,13 +1,17 @@
 package cwru.edu.hackcwru.events;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.data.Event;
-import cwru.edu.hackcwru.data.EventsList;
+import cwru.edu.hackcwru.data.EventList;
+import cwru.edu.hackcwru.data.LocalData;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
 import cwru.edu.hackcwru.utils.Log;
@@ -20,6 +24,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EventsPresenter implements EventsContract.Presenter, EventDetailContract.Presenter {
     private final String LOG_TAG = "EventsPresenter";
 
+    SharedPreferences sharedPreferences;
+
     EventsContract.View eventsView;
 
     EventDetailContract.View eventDetailView;
@@ -31,9 +37,13 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     boolean showingSavedEvents = false;
 
-    public EventsPresenter(@NonNull EventsContract.View eventsView, @NonNull EventDetailContract.View eventDetailView) {
+    @Inject
+    public EventsPresenter(@NonNull EventsContract.View eventsView,
+                           @NonNull EventDetailContract.View eventDetailView,
+                           SharedPreferences sharedPreferences) {
         this.eventsView = eventsView;
         this.eventDetailView = eventDetailView;
+        this.sharedPreferences = sharedPreferences;
         eventsView.setPresenter(this);
         eventDetailView.setPresenter(this);
 
@@ -42,7 +52,7 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
         savedEvents = new ArrayList<>();
     }
 
-    private void initializeRetrofit(){
+    private void initializeRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(HackCWRUServerCalls.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -63,12 +73,11 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     @Override
     public void saveEvent(@NonNull Event event) {
         String snackBarMessage;
-        if(event.isSaved()){
+        if (event.isSaved()) {
             event.setSaved(false);
             savedEvents.remove(event);
             snackBarMessage = "Event unsaved.";
-        }
-        else{
+        } else {
             event.setSaved(true);
             savedEvents.add(event);
             snackBarMessage = "Event saved.";
@@ -79,19 +88,27 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     @Override
     public void loadEvents() {
-        Call<EventsList> loadEventsCall = hackCWRUServerCalls.getEventsFromServer();
-        loadEventsCall.enqueue(new Callback<EventsList>() {
+        // TODO: Check server against local
+        EventList localEventList = LocalData.getEventsFromLocal(this.sharedPreferences);
+        if(localEventList != null) {
+            allEvents = localEventList.getEvents();
+            showAllEvents();
+        }
+
+        Call<EventList> loadEventsCall = hackCWRUServerCalls.getEventsFromServer();
+        loadEventsCall.enqueue(new Callback<EventList>() {
             @Override
-            public void onResponse(Call<EventsList> call, Response<EventsList> response) {
+            public void onResponse(Call<EventList> call, Response<EventList> response) {
                 // TODO: Perform data check with server and current
-                EventsList eventsResponse = response.body();
+                EventList eventsResponse = response.body();
                 Log.d(LOG_TAG, eventsResponse.toString());
                 allEvents = eventsResponse.getEvents();
                 showAllEvents();
+                LocalData.saveEventsToLocal(EventsPresenter.this.sharedPreferences, eventsResponse);
             }
 
             @Override
-            public void onFailure(Call<EventsList> call, Throwable t) {
+            public void onFailure(Call<EventList> call, Throwable t) {
                 Log.e(LOG_TAG, t.toString());
             }
         });
@@ -99,11 +116,10 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
 
     @Override
     public void bookmarkButtonPerformClick() {
-        if(showingSavedEvents){
+        if (showingSavedEvents) {
             eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_border_white_24dp);
             showAllEvents();
-        }
-        else{
+        } else {
             eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_white_24dp);
             showSavedEvents();
         }
@@ -123,10 +139,9 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     }
 
     private void processEvents(List<Event> events) {
-        if(events.size() == 0) {
+        if (events.size() == 0) {
             eventsView.showNoEventsText();
-        }
-        else {
+        } else {
             eventsView.hideNoEventsText();
         }
         eventsView.showEvents(events);

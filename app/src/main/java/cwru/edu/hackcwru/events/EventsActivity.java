@@ -2,6 +2,7 @@ package cwru.edu.hackcwru.events;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +38,8 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
-    private EventsPresenter eventsPresenter;
+    @Inject
+    EventsPresenter eventsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +162,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         }
     }
 
-    private void attachFragments(){
+    private void attachFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         Fragment eventsFragment = fragmentManager.findFragmentById(R.id.content_frame);
@@ -173,6 +177,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
         }
 
-        eventsPresenter = new EventsPresenter((EventsFragment) eventsFragment, eventDetailFragment);
+        // TODO: Use DI instead
+        eventsPresenter = new EventsPresenter((EventsFragment) eventsFragment, eventDetailFragment, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 }
