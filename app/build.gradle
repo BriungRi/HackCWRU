@@ -12,7 +12,7 @@ android {
         versionName "1.0"
 
         jackOptions {
-            enabled true
+            enabled false
         }
     }
     buildTypes {
@@ -22,8 +22,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     dexOptions {
@@ -71,6 +71,11 @@ dependencies {
 
 //    Apache
     compile "org.apache.commons:commons-lang3:$rootProject.apacheVersion"
+
+//    Dagger
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    provided "javax.annotation:jsr250-api:$rootProject.javaxAnnotationVersion"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"

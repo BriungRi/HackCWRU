@@ -21,9 +21,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
+import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.data.Event;
 import cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout;
@@ -35,7 +39,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EventsFragment extends Fragment implements EventsContract.View {
     private final String LOG_TAG = "EventsFragment";
 
-    private EventsContract.Presenter presenter;
+    @Inject
+    EventsPresenter presenter;
+
+    private Unbinder unbinder;
 
     @BindView(R.id.event_list)
     RecyclerView eventList;
@@ -79,6 +86,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((HackCWRUApplication) getActivity().getApplication()).getNetComponent().inject(this);
         eventListAdapter = new EventListAdapter(new ArrayList<Event>(), eventItemListener);
     }
 
@@ -86,7 +94,9 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.events_fragment, container, false);
-        ButterKnife.bind(this, rootView);
+
+        unbinder = ButterKnife.bind(this, rootView);
+        presenter.setEventsView(this);
 
         eventList.setHasFixedSize(true);
         eventList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -111,8 +121,10 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     @Override
-    public void setPresenter(@NonNull EventsContract.Presenter presenter) {
-        this.presenter = checkNotNull(presenter);
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        presenter.setEventsView(null);
     }
 
     @Override

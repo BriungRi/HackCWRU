@@ -40,20 +40,18 @@ public class NavigationTest {
     public ActivityTestRule<EventsActivity> mActivityTestRule =
             new ActivityTestRule<>(EventsActivity.class);
 
-    @Test
-    public void clickOnAndroidHomeIcon_OpensNavigation() {
-        // Check that left drawer is closed at startup
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(Gravity.LEFT))); // Left Drawer should be closed.
-
-        // Open Drawer
-        onView(withContentDescription(getToolbarNavigationContentDescription(
-                mActivityTestRule.getActivity(), R.id.toolbar))).perform(click());
-
-        // Check if drawer is open
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isOpen(Gravity.LEFT))); // Left drawer is open open.
-    }
-
-
+//    @Test
+//    public void clickOnAndroidHomeIcon_OpensNavigation() {
+//        // Check that left drawer is closed at startup
+//        onView(withId(R.id.drawer_layout))
+//                .check(matches(isClosed(Gravity.LEFT))); // Left Drawer should be closed.
+//
+//        // Open Drawer
+//        onView(withContentDescription(getToolbarNavigationContentDescription(
+//                mActivityTestRule.getActivity(), R.id.toolbar))).perform(click());
+//
+//        // Check if drawer is open
+//        onView(withId(R.id.drawer_layout))
+//                .check(matches(isOpen(Gravity.LEFT))); // Left drawer is open open.
+//    }
 }

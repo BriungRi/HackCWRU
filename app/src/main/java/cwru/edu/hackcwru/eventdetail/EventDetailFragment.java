@@ -1,22 +1,30 @@
 package cwru.edu.hackcwru.eventdetail;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.data.Event;
 import cwru.edu.hackcwru.events.EventsActivity;
+import cwru.edu.hackcwru.events.EventsContract;
+import cwru.edu.hackcwru.events.EventsPresenter;
 
 public class EventDetailFragment extends Fragment implements EventDetailContract.View {
     private final String LOG_TAG = "EventDetailFragment";
 
-    private EventDetailContract.Presenter presenter;
+    @Inject
+    EventsPresenter presenter;
 
     @BindView(R.id.event_detail_title)
     TextView eventDetailTitle;
@@ -24,6 +32,8 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     TextView eventDetailTime;
     @BindView(R.id.event_detail_description)
     TextView eventDetailDescription;
+
+    Unbinder unbinder;
 
     public static EventDetailFragment newInstance() {
         return new EventDetailFragment();
@@ -36,18 +46,23 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((HackCWRUApplication) getActivity().getApplication()).getNetComponent().inject(this);
     }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.event_detail_fragment, container, false);
-        ButterKnife.bind(this, rootView);
+
+        unbinder = ButterKnife.bind(this, rootView);
+        presenter.setEventDetailView(this);
 
         return rootView;
     }
 
     @Override
-    public void setPresenter(EventDetailContract.Presenter presenter) {
-        this.presenter = presenter;
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -60,10 +75,9 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
         } else
             throw new NullPointerException();
         EventsActivity activity = (EventsActivity) getActivity();
-        if(activity != null){
+        if (activity != null) {
             activity.showEventDetail();
-        }
-        else
+        } else
             throw new NullPointerException();
     }
 }

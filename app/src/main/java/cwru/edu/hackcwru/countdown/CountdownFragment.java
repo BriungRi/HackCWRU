@@ -49,21 +49,16 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
     }
 
     @Override
-    public void setPresenter(CountdownContract.Presenter presenter) {
-        this.presenter = presenter;
-    }
-
-    @Override
     public void displayCountdown() {
-        
-        long currentTime=360000;
-        final long nextEventStartTime=720000;
-        final CountDownTimer countDownTimer = new CountDownTimer(nextEventStartTime-currentTime, 1000) {
+
+        long currentTime = 360000;
+        final long nextEventStartTime = 720000;
+        final CountDownTimer countDownTimer = new CountDownTimer(nextEventStartTime - currentTime, 1000) {
             @Override
             public void onTick(long l) {
                 String currentDateTimeString = formatEpoch(l);
                 //Actual logic will use current time so progress doesn't start at the same value every time
-                int progress=(int)(100*(((nextEventStartTime-l)*1.0)/(nextEventStartTime)));
+                int progress = (int) (100 * (((nextEventStartTime - l) * 1.0) / (nextEventStartTime)));
                 countdownProgress.setProgress(progress);
                 countdownView.setText(currentDateTimeString);
             }
@@ -75,12 +70,13 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
         };
         countDownTimer.start();
     }
-    public String formatEpoch(long l){
-        int seconds = (int) (l / 1000) % 60 ;
-        int minutes = (int) ((l / (1000*60)) % 60);
-        int hours   = (int) ((l / (1000*60*60)) % 24);
-        return String.format("%02d", hours)+":"+
-               String.format("%02d", minutes)+":"+
-               String.format("%02d", seconds);
+
+    public String formatEpoch(long l) {
+        int seconds = (int) (l / 1000) % 60;
+        int minutes = (int) ((l / (1000 * 60)) % 60);
+        int hours = (int) ((l / (1000 * 60 * 60)) % 24);
+        return String.format("%02d", hours) + ":" +
+                String.format("%02d", minutes) + ":" +
+                String.format("%02d", seconds);
     }
 }

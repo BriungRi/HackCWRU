@@ -1,8 +1,8 @@
 package cwru.edu.hackcwru.events;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -21,10 +21,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.eventdetail.EventDetailFragment;
 import cwru.edu.hackcwru.utils.ActivityUtils;
 import cwru.edu.hackcwru.utils.FragmentUtils;
+import cwru.edu.hackcwru.utils.Log;
 import cwru.edu.hackcwru.utils.UIUtils;
 
 public class EventsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,9 +39,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     DrawerLayout drawerLayout;
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
-
-    @Inject
-    EventsPresenter eventsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         // Prevent main content from dimming while drawer is open
         this.drawerLayout.setScrimColor(Color.TRANSPARENT);
 
-//        drawerToggle.syncState();
         // Default selected item to schedule
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
@@ -176,8 +174,5 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             eventDetailFragment = EventDetailFragment.newInstance();
             ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
         }
-
-        // TODO: Use DI instead
-        eventsPresenter = new EventsPresenter((EventsFragment) eventsFragment, eventDetailFragment, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 }
