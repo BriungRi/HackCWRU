@@ -6,7 +6,8 @@ import java.util.List;
 
 import cwru.edu.hackcwru.BasePresenter;
 import cwru.edu.hackcwru.BaseView;
-import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.domain.Event;
+import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 
 public interface EventsContract {
 
@@ -25,6 +26,10 @@ public interface EventsContract {
     }
 
     interface Presenter extends BasePresenter {
+        void setEventsView(EventsContract.View eventsView);
+
+        void setEventDetailView(EventDetailContract.View eventDetailView);
+
         void openEventDetails(@NonNull Event event);
 
         void saveEvent(@NonNull Event event);

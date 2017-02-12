@@ -1,16 +1,13 @@
 package cwru.edu.hackcwru.events;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import cwru.edu.hackcwru.R;
-import cwru.edu.hackcwru.data.Event;
-import cwru.edu.hackcwru.data.EventList;
+import cwru.edu.hackcwru.domain.Event;
+import cwru.edu.hackcwru.domain.EventList;
 import cwru.edu.hackcwru.data.LocalData;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
@@ -18,51 +15,41 @@ import cwru.edu.hackcwru.utils.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EventsPresenter implements EventsContract.Presenter, EventDetailContract.Presenter {
     private final String LOG_TAG = "EventsPresenter";
 
-    SharedPreferences sharedPreferences;
+    LocalData localData;
 
-    EventsContract.View eventsView;
+    private EventsContract.View eventsView;
 
-    EventDetailContract.View eventDetailView;
+    private EventDetailContract.View eventDetailView;
 
-    HackCWRUServerCalls hackCWRUServerCalls;
+    private HackCWRUServerCalls hackCWRUServerCalls;
 
-    List<Event> allEvents;
-    List<Event> savedEvents;
+    private List<Event> allEvents;
+    private List<Event> savedEvents = new ArrayList<>();
 
-    boolean showingSavedEvents = false;
+    private boolean showingSavedEvents = false;
 
-    @Inject
-    public EventsPresenter(@NonNull EventsContract.View eventsView,
-                           @NonNull EventDetailContract.View eventDetailView,
-                           SharedPreferences sharedPreferences) {
-        this.eventsView = eventsView;
-        this.eventDetailView = eventDetailView;
-        this.sharedPreferences = sharedPreferences;
-        eventsView.setPresenter(this);
-        eventDetailView.setPresenter(this);
-
-        initializeRetrofit();
-
-        savedEvents = new ArrayList<>();
-    }
-
-    private void initializeRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(HackCWRUServerCalls.API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        hackCWRUServerCalls = retrofit.create(HackCWRUServerCalls.class);
+    public EventsPresenter(@NonNull LocalData localData, @NonNull HackCWRUServerCalls hackCWRUServerCalls) {
+        this.localData = localData;
+        this.hackCWRUServerCalls = hackCWRUServerCalls;
     }
 
     @Override
     public void start() {
         loadEvents();
+    }
+
+    @Override
+    public void setEventsView(EventsContract.View eventsView) {
+        this.eventsView = eventsView;
+    }
+
+    @Override
+    public void setEventDetailView(EventDetailContract.View eventDetailView) {
+        this.eventDetailView = eventDetailView;
     }
 
     @Override
@@ -89,8 +76,9 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     @Override
     public void loadEvents() {
         // TODO: Check server against local
-        EventList localEventList = LocalData.getEventsFromLocal(this.sharedPreferences);
+        EventList localEventList = localData.getEventsFromLocal();
         if(localEventList != null) {
+            Log.d(LOG_TAG, "Events Loaded From Local");
             allEvents = localEventList.getEvents();
             showAllEvents();
         }
@@ -101,10 +89,10 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
             public void onResponse(Call<EventList> call, Response<EventList> response) {
                 // TODO: Perform data check with server and current
                 EventList eventsResponse = response.body();
-                Log.d(LOG_TAG, eventsResponse.toString());
+//                Log.d(LOG_TAG, eventsResponse.toString());
                 allEvents = eventsResponse.getEvents();
                 showAllEvents();
-                LocalData.saveEventsToLocal(EventsPresenter.this.sharedPreferences, eventsResponse);
+                localData.saveEventsToLocal(eventsResponse);
             }
 
             @Override

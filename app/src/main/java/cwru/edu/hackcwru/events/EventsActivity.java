@@ -2,7 +2,6 @@ package cwru.edu.hackcwru.events;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -16,8 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,9 +34,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     DrawerLayout drawerLayout;
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
-
-    @Inject
-    EventsPresenter eventsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +74,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         // Prevent main content from dimming while drawer is open
         this.drawerLayout.setScrimColor(Color.TRANSPARENT);
 
-//        drawerToggle.syncState();
         // Default selected item to schedule
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
@@ -121,11 +114,10 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
 
         mainToolbar.setTitle(item.getTitle());
 
-        // TODO: Figure out a way to remove duplicate closeALlOverlayElements duplicate code
+        FragmentUtils.closeAllOverlayElements(EventsActivity.this);
         switch (item.getItemId()) {
             case R.id.item_schedule:
                 attachFragments();
-                FragmentUtils.closeAllOverlayElements(EventsActivity.this);
                 break;
             case R.id.item_maps:
                 break;
@@ -176,8 +168,5 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             eventDetailFragment = EventDetailFragment.newInstance();
             ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
         }
-
-        // TODO: Use DI instead
-        eventsPresenter = new EventsPresenter((EventsFragment) eventsFragment, eventDetailFragment, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 }

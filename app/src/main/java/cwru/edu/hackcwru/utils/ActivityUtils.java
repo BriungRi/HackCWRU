@@ -22,6 +22,7 @@ public class ActivityUtils {
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment);
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.commit();
     }
 }

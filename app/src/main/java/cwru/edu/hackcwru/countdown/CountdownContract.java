@@ -9,6 +9,6 @@ public class CountdownContract {
     }
 
     interface Presenter extends BasePresenter{
-
+        void setCountdownView(CountdownContract.View countdownView);
     }
 }
