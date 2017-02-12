@@ -1,7 +1,6 @@
 package cwru.edu.hackcwru.eventdetail;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
-import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.domain.Event;
 import cwru.edu.hackcwru.events.EventsActivity;
-import cwru.edu.hackcwru.events.EventsContract;
 import cwru.edu.hackcwru.events.EventsPresenter;
 
 public class EventDetailFragment extends Fragment implements EventDetailContract.View {
@@ -33,7 +31,7 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     @BindView(R.id.event_detail_description)
     TextView eventDetailDescription;
 
-    Unbinder unbinder;
+    private Unbinder unbinder;
 
     public static EventDetailFragment newInstance() {
         return new EventDetailFragment();
@@ -63,6 +61,7 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        presenter.setEventDetailView(null);
     }
 
     @Override

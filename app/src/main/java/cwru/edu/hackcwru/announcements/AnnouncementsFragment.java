@@ -14,26 +14,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
-import cwru.edu.hackcwru.data.Announcement;
-import cwru.edu.hackcwru.data.AnnouncementsList;
-import cwru.edu.hackcwru.server.HackCWRUServerCalls;
-import cwru.edu.hackcwru.utils.Log;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import cwru.edu.hackcwru.domain.Announcement;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-
-public class AnnouncementsFragment extends Fragment {
+public class AnnouncementsFragment extends Fragment implements AnnouncementsContract.View {
     private final String LOG_TAG = "AnnouncementsFragment";
+
+    @Inject
+    AnnouncementsPresenter presenter;
 
     @BindView(R.id.announcements_list)
     RecyclerView announcementsList;
@@ -42,52 +41,64 @@ public class AnnouncementsFragment extends Fragment {
     @BindView(R.id.no_announcements_text)
     TextView noAnnouncementsText;
 
-    public AnnouncementsFragment(){
+    private Unbinder unbinder;
+
+    public AnnouncementsFragment() {
         // Empty Constructor
     }
 
-    public static AnnouncementsFragment newInstance(){
+    public static AnnouncementsFragment newInstance() {
         return new AnnouncementsFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((HackCWRUApplication) getActivity().getApplication()).getNetComponent().inject(this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.announcements_fragment, container, false);
-        ButterKnife.bind(this, rootView);
+        this.unbinder = ButterKnife.bind(this, rootView);
+        this.presenter.setAnnouncementsView(this);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(HackCWRUServerCalls.API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        HackCWRUServerCalls hackCWRUServerCalls = retrofit.create(HackCWRUServerCalls.class);
-
-        Call<AnnouncementsList> loadAnnouncementsCall = hackCWRUServerCalls.getAnnouncementsFromServer();
-        loadAnnouncementsCall.enqueue(new Callback<AnnouncementsList>() {
-            @Override
-            public void onResponse(Call<AnnouncementsList> call, Response<AnnouncementsList> response) {
-                List<Announcement> announcements = response.body().getAnnouncements();
-
-                Log.d(LOG_TAG, response.body().toString());
-                announcementListAdapter = new AnnouncementListAdapter(announcements);
-                announcementsList.setHasFixedSize(true);
-                announcementsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-                announcementsList.setAdapter(announcementListAdapter);
-                announcementsList.addItemDecoration(new AnnouncementsFragment.SimpleDividerItemDecoration(getActivity()));
-
-                if(announcements.isEmpty())
-                    noAnnouncementsText.setVisibility(View.VISIBLE);
-                else
-                    noAnnouncementsText.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<AnnouncementsList> call, Throwable t) {
-                Log.d(LOG_TAG, "getAnnouncementsFromServer() call failed");
-            }
-        });
+        announcementListAdapter = new AnnouncementListAdapter(new ArrayList<Announcement>());
+        announcementsList.setHasFixedSize(true);
+        announcementsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        announcementsList.setAdapter(announcementListAdapter);
+        announcementsList.addItemDecoration(new AnnouncementsFragment.SimpleDividerItemDecoration(getActivity()));
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.presenter.start();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        this.unbinder.unbind();
+        this.presenter.setAnnouncementsView(null);
+    }
+
+    @Override
+    public void showAnnouncements(List<Announcement> announcements) {
+        this.announcementListAdapter.setAnnouncements(announcements);
+    }
+
+    @Override
+    public void showNoAnnouncementsView() {
+        noAnnouncementsText.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoAnnouncementsView() {
+        noAnnouncementsText.setVisibility(View.GONE);
     }
 
     public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementsFragment.AnnouncementListAdapter.ViewHolder> {

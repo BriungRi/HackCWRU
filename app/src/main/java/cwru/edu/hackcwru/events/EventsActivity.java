@@ -1,6 +1,5 @@
 package cwru.edu.hackcwru.events;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,16 +16,12 @@ import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.eventdetail.EventDetailFragment;
 import cwru.edu.hackcwru.utils.ActivityUtils;
 import cwru.edu.hackcwru.utils.FragmentUtils;
-import cwru.edu.hackcwru.utils.Log;
 import cwru.edu.hackcwru.utils.UIUtils;
 
 public class EventsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -119,11 +114,10 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
 
         mainToolbar.setTitle(item.getTitle());
 
-        // TODO: Figure out a way to remove duplicate closeALlOverlayElements duplicate code
+        FragmentUtils.closeAllOverlayElements(EventsActivity.this);
         switch (item.getItemId()) {
             case R.id.item_schedule:
                 attachFragments();
-                FragmentUtils.closeAllOverlayElements(EventsActivity.this);
                 break;
             case R.id.item_maps:
                 break;

@@ -1,14 +1,13 @@
 package cwru.edu.hackcwru.events;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cwru.edu.hackcwru.R;
-import cwru.edu.hackcwru.data.Event;
-import cwru.edu.hackcwru.data.EventList;
+import cwru.edu.hackcwru.domain.Event;
+import cwru.edu.hackcwru.domain.EventList;
 import cwru.edu.hackcwru.data.LocalData;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;

@@ -4,9 +4,7 @@
     <!-- The background color, preferably the same as your normal theme -->
     <item android:drawable="@android:color/white" />
     <!-- Your product logo - 144dp color version of your app icon -->
-    <item
-        android:left="@dimen/splash_logo_left_right"
-        android:right="@dimen/splash_logo_left_right">
+    <item>
         <bitmap
             android:gravity="center"
             android:src="@drawable/logo" />

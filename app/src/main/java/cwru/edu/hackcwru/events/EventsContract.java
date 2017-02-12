@@ -6,7 +6,7 @@ import java.util.List;
 
 import cwru.edu.hackcwru.BasePresenter;
 import cwru.edu.hackcwru.BaseView;
-import cwru.edu.hackcwru.data.Event;
+import cwru.edu.hackcwru.domain.Event;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 
 public interface EventsContract {

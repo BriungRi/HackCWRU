@@ -4,6 +4,7 @@ import android.app.Application;
 
 import cwru.edu.hackcwru.dagger.ApplicationModule;
 import cwru.edu.hackcwru.dagger.DaggerNetComponent;
+import cwru.edu.hackcwru.dagger.DataModule;
 import cwru.edu.hackcwru.dagger.NetComponent;
 import cwru.edu.hackcwru.dagger.NetModule;
 
@@ -18,6 +19,7 @@ public class HackCWRUApplication extends Application {
         netComponent = DaggerNetComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .netModule(new NetModule())
+                .dataModule(new DataModule())
                 .build();
     }
 

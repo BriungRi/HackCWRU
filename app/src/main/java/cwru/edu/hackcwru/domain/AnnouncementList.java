@@ -1,4 +1,4 @@
-package cwru.edu.hackcwru.data;
+package cwru.edu.hackcwru.domain;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class AnnouncementsList {
+public class AnnouncementList {
 
     @SerializedName("announcements")
     @Expose

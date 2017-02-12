@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
-import cwru.edu.hackcwru.data.LocalData;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
 import dagger.Module;
 import dagger.Provides;
@@ -47,11 +46,5 @@ public class NetModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit.create(HackCWRUServerCalls.class);
-    }
-
-    @Provides
-    @Singleton
-    LocalData provideLocalData(SharedPreferences sharedPreferences){
-        return new LocalData(sharedPreferences);
     }
 }
