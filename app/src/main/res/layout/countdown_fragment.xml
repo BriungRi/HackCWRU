@@ -16,6 +16,41 @@
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="Event Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/next_event_name"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:fontFamily="sans-serif-thin"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:text="Event Description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/next_event_description"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-thin"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:text="00:00"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/next_event_time"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:fontFamily="sans-serif-thin" />
+            </LinearLayout>
             <ProgressBar
                 android:id="@+id/countdown_progress_bar"
                 android:layout_width="match_parent"
@@ -26,13 +61,15 @@
                 android:max="100"
                 android:progress="0"
                 android:layout_gravity="center"
-                android:layout_height="match_parent" />
+                android:layout_height="568dp"
+                android:layout_marginTop="32dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="32dp">
 
                 <TextView
                     android:id="@+id/countdown_view"
