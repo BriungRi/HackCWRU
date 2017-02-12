@@ -94,7 +94,6 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
                 if (countdownProgress != null && countdownView != null) {
                     String currentDateTimeString = formatEpoch(l);
                     int progress = (int) (100 * ((l * 1.0) / (nextEventStartTime-lastEventStartTime)));
-                    Log.d(LOG_TAG,"Progress "+progress);
                     countdownProgress.setProgress(progress);
                     countdownView.setText(currentDateTimeString);
                 }
@@ -131,7 +130,6 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
     private void getNextAndLastEvents(){
         long currentTime = System.currentTimeMillis();
         for(int j=0;j<allEvents.size();j++){
-            Log.d(LOG_TAG,""+getEpochFromDateTime(allEvents.get(j).getStartDateTime())+"  "+currentTime);
             if(getEpochFromDateTime(allEvents.get(j).getStartDateTime())>currentTime){
                 nextEvent=allEvents.get(j);
                 if(j>0) {
@@ -142,8 +140,8 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
             }
             else{
                 //TODO: these should be 0 but for testing keep them as 1 and 2
-                nextEvent=allEvents.get(2);
-                lastEvent=allEvents.get(1);
+                nextEvent=allEvents.get(1);
+                lastEvent=allEvents.get(0);
             }
         }
         nextEventName.setText(nextEvent.getName());
