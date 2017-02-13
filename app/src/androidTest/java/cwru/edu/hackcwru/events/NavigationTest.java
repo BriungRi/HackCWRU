@@ -58,7 +58,7 @@ public class NavigationTest {
 
         // Check if drawer is open
         onView(withId(R.id.drawer_layout))
-                .check(matches(isOpen(Gravity.LEFT))); // Left drawer is open open.
+                .check(matches(isOpen(Gravity.LEFT))); // Left drawer is open.
 
         onView(withId(R.id.navigation_view))
                 .perform(navigateTo(R.id.item_announcements));
@@ -72,7 +72,7 @@ public class NavigationTest {
 
         // Check if drawer is open
         onView(withId(R.id.drawer_layout))
-                .check(matches(isOpen(Gravity.LEFT))); // Left drawer is open open.
+                .check(matches(isOpen(Gravity.LEFT))); // Left drawer is open.
 
         onView(withId(R.id.navigation_view))
                 .perform(navigateTo(R.id.item_countdown));
