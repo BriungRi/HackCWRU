@@ -13,7 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FirebaseService extends FirebaseInstanceIdService {
-    private final String LOG_TAG = "Firebase Service";
+    private final String LOG_TAG = "FirebaseService";
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.

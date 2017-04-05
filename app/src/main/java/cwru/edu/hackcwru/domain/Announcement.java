@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import cwru.edu.hackcwru.utils.TimeUtils;
+
 public class Announcement {
 
     @SerializedName("_id")
@@ -32,24 +34,13 @@ public class Announcement {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+//        return TimeUtils.prettifyTime(updatedAt);
     }
 
     @Override

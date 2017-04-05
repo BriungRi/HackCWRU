@@ -10,6 +10,8 @@ public class AnnouncementsContract {
     interface View extends BaseView<Presenter>{
         void showAnnouncements(List<Announcement> announcements);
 
+        void onRefreshFinish();
+
         void showNoAnnouncementsView();
 
         void hideNoAnnouncementsView();
@@ -17,6 +19,8 @@ public class AnnouncementsContract {
 
     interface Presenter extends BasePresenter{
         void setAnnouncementsView(AnnouncementsContract.View announcementsView);
+
+        void loadAnnouncements();
 
         void loadAnnouncementsFromLocal();
 

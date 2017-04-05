@@ -17,6 +17,7 @@ import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Event;
 import cwru.edu.hackcwru.events.EventsActivity;
 import cwru.edu.hackcwru.events.EventsPresenter;
+import cwru.edu.hackcwru.utils.TimeUtils;
 
 public class EventDetailFragment extends Fragment implements EventDetailContract.View {
     private final String LOG_TAG = "EventDetailFragment";
@@ -68,7 +69,6 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     public void populateEvent(Event event) {
         if (event != null) {
             eventDetailTitle.setText(event.getName());
-            // TODO: Prettify the times
             eventDetailTime.setText(event.getStartDateTime() + " - " + event.getEndDateTime());
             eventDetailDescription.setText(event.getDescription());
         } else

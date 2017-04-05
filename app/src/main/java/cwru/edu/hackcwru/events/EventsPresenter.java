@@ -61,25 +61,26 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     public void saveEvent(@NonNull Event event) {
         String snackBarMessage;
         if (event.isSaved()) {
-            event.setSaved(false);
-            savedEvents.remove(event);
-            snackBarMessage = "Event unsaved.";
-        } else {
-            event.setSaved(true);
             savedEvents.add(event);
             snackBarMessage = "Event saved.";
+        } else {
+            savedEvents.remove(event);
+            snackBarMessage = "Event unsaved.";
         }
 
         eventsView.showOnEventSavedSnackback(snackBarMessage);
+
+        EventList eventListToSave = new EventList();
+        eventListToSave.setEvents(this.allEvents);
+        localData.saveEventsToLocal(eventListToSave);
     }
 
     @Override
     public void loadEvents() {
-        // TODO: Check server against local
-        EventList localEventList = localData.getEventsFromLocal();
-        if(localEventList != null) {
-            Log.d(LOG_TAG, "Events Loaded From Local");
+        final EventList localEventList = localData.getEventsFromLocal();
+        if (localEventList != null) {
             allEvents = localEventList.getEvents();
+            savedEvents = localEventList.getSavedEvents();
             showAllEvents();
         }
 
@@ -87,10 +88,8 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
         loadEventsCall.enqueue(new Callback<EventList>() {
             @Override
             public void onResponse(Call<EventList> call, Response<EventList> response) {
-                // TODO: Perform data check with server and current
                 EventList eventsResponse = response.body();
-//                Log.d(LOG_TAG, eventsResponse.toString());
-                allEvents = eventsResponse.getEvents();
+                allEvents = sanityCheckEvents(localEventList, eventsResponse);
                 showAllEvents();
                 localData.saveEventsToLocal(eventsResponse);
             }
@@ -134,5 +133,16 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
         }
         eventsView.showEvents(events);
         eventsView.onRefreshFinish();
+    }
+
+    private static List<Event> sanityCheckEvents(EventList localEventList, EventList remoteEventList) {
+        List<Event> local = localEventList.getEvents();
+        List<Event> remote = remoteEventList.getEvents();
+
+        for (int i = 0; i < remote.size(); i++) {
+            if (i < local.size())
+                remote.get(i).setSaved(local.get(i).isSaved());
+        }
+        return remote;
     }
 }

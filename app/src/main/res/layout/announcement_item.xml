@@ -17,7 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|top"
-        android:text="Title"
         android:textColor="@color/black"
         android:textSize="@dimen/list_event_name_text_size"
         android:visibility="visible" />
@@ -38,7 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
         android:layout_marginTop="3dp"
-        android:text="12:00 AM - 1:00AM"
         android:textColor="@android:color/darker_gray"
         android:textSize="@dimen/list_event_time_text_size" />
 

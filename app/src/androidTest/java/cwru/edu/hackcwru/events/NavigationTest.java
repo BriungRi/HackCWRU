@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static cwru.edu.hackcwru.NavigationViewActions.navigateTo;
 
@@ -23,6 +24,7 @@ import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static cwru.edu.hackcwru.TestUtils.getToolbarNavigationContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.anything;
 
 /**
  * Tests for the {@link DrawerLayout} layout component in {@link cwru.edu.hackcwru.events.EventsActivity} which manages

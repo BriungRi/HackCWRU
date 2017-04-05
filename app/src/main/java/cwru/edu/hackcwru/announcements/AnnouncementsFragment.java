@@ -1,12 +1,12 @@
 package cwru.edu.hackcwru.announcements;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +25,7 @@ import butterknife.Unbinder;
 import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Announcement;
+import cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,6 +41,9 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementsCont
 
     @BindView(R.id.no_announcements_text)
     TextView noAnnouncementsText;
+
+    @BindView(R.id.refresh_layout)
+    ScrollChildSwipeRefreshLayout swipeRefreshLayout;
 
     private Unbinder unbinder;
 
@@ -68,7 +72,15 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementsCont
         announcementsList.setHasFixedSize(true);
         announcementsList.setLayoutManager(new LinearLayoutManager(getActivity()));
         announcementsList.setAdapter(announcementListAdapter);
-        announcementsList.addItemDecoration(new AnnouncementsFragment.SimpleDividerItemDecoration(getActivity()));
+        announcementsList.addItemDecoration(new AnnouncementsFragment.SimpleDividerItemDecoration());
+
+        swipeRefreshLayout.setScrollUpChild(announcementsList);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.loadAnnouncements();
+            }
+        });
 
         return rootView;
     }
@@ -89,6 +101,21 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementsCont
     @Override
     public void showAnnouncements(List<Announcement> announcements) {
         this.announcementListAdapter.setAnnouncements(announcements);
+    }
+
+    @Override
+    public void onRefreshFinish() {
+        if (swipeRefreshLayout != null)
+            swipeRefreshLayout.setRefreshing(false);
+        else if (getView() != null) {
+            final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
     }
 
     @Override
@@ -128,7 +155,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementsCont
 
         private void setAnnouncements(List<Announcement> announcements) {
             this.announcements = checkNotNull(announcements);
-//            notifyDataSetChanged();
+            notifyDataSetChanged();
         }
 
         @Override
@@ -140,11 +167,10 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementsCont
 
         @Override
         public void onBindViewHolder(final AnnouncementsFragment.AnnouncementListAdapter.ViewHolder holder, final int position) {
-            final Announcement event = announcements.get(position);
+            final Announcement announcement = announcements.get(position);
 
-            holder.announcementTitle.setText(event.getTitle());
-            holder.announcementUpdatedAt.setText(event.getUpdatedAt());
-            holder.announcementMessage.setText(event.getMessage());
+            holder.announcementTitle.setText(announcement.getTitle());
+            holder.announcementMessage.setText(announcement.getMessage());
         }
 
         @Override
@@ -156,7 +182,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementsCont
     public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
         private Drawable mDivider;
 
-        public SimpleDividerItemDecoration(Context context) {
+        public SimpleDividerItemDecoration() {
             mDivider = ResourcesCompat.getDrawable(getResources(), R.drawable.line_divider, null);
         }
 

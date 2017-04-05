@@ -21,6 +21,10 @@ public class AnnouncementList {
         this.announcements = announcements;
     }
 
+    public boolean isEmpty(){
+        return this.announcements.isEmpty();
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
