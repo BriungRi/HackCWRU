@@ -14,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FirebaseService extends FirebaseInstanceIdService {
     private final String LOG_TAG = "FirebaseService";
+
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
@@ -23,7 +24,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
         sendRegistrationToServer(refreshedToken);
     }
 
-    private void sendRegistrationToServer(String deviceToken){
+    private void sendRegistrationToServer(String deviceToken) {
         HackCWRUServerCalls hackCWRUServerCalls = getHackCWRUServerCalls();
 
         Call<DeviceTokenResponse> registerDevice = hackCWRUServerCalls.registerDevice(getString(R.string.HACKCWRU_API_KEY),
@@ -32,8 +33,9 @@ public class FirebaseService extends FirebaseInstanceIdService {
         registerDevice.enqueue(new Callback<DeviceTokenResponse>() {
             @Override
             public void onResponse(Call<DeviceTokenResponse> call, Response<DeviceTokenResponse> response) {
+                Log.d(LOG_TAG, "Device Registration Success");
                 DeviceTokenResponse deviceTokenResponse = response.body();
-                if(deviceTokenResponse!=null) {
+                if (deviceTokenResponse != null) {
                     Log.d(LOG_TAG, deviceTokenResponse.toString());
                 }
             }
@@ -45,7 +47,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
         });
     }
 
-    private HackCWRUServerCalls getHackCWRUServerCalls(){
+    private HackCWRUServerCalls getHackCWRUServerCalls() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(HackCWRUServerCalls.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

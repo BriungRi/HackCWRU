@@ -5,11 +5,13 @@ import java.util.List;
 import cwru.edu.hackcwru.domain.Map;
 import cwru.edu.hackcwru.domain.MapList;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
+import cwru.edu.hackcwru.utils.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MapsPresenter implements MapsContract.Presenter {
+    private final String LOG_TAG = "MapsPresenter";
 
     private MapsContract.View mapsView;
 
@@ -21,6 +23,7 @@ public class MapsPresenter implements MapsContract.Presenter {
 
     @Override
     public void start() {
+        Log.d(LOG_TAG, "start()");
         Call<MapList> mapListCall = hackCWRUServerCalls.getMapsFromServer();
         mapListCall.enqueue(new Callback<MapList>() {
             @Override
@@ -31,7 +34,7 @@ public class MapsPresenter implements MapsContract.Presenter {
 
             @Override
             public void onFailure(Call<MapList> call, Throwable t) {
-
+                Log.d(LOG_TAG, "Map Server Call failed");
             }
         });
     }

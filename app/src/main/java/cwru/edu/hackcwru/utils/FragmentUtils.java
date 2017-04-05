@@ -41,9 +41,9 @@ public class FragmentUtils {
     }
 
     public static void closeAllOverlayElements(EventsActivity activity) {
-        closeCountdownFragment(activity);
         closeAnnouncementsFragment(activity);
         closeMapsFragment(activity);
+        closeCountdownFragment(activity);
     }
 
     private static CountdownFragment countdownFragment;
@@ -86,5 +86,9 @@ public class FragmentUtils {
     private static void closeAnnouncementsFragment(EventsActivity activity) {
         closeOverlayElement(activity, announcementsFragment);
         announcementsFragment = null;
+    }
+
+    public static boolean fragmentsAreAllClosed() {
+        return announcementsFragment == null && mapsFragment == null && countdownFragment == null;
     }
 }

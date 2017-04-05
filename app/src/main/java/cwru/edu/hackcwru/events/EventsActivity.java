@@ -78,7 +78,8 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        attachFragments();
+        if(FragmentUtils.fragmentsAreAllClosed())
+            attachFragments();
     }
 
     @Override

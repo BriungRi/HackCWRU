@@ -45,12 +45,20 @@ public class Event {
         return description;
     }
 
-    public String getStartDateTime() {
+    public String getPrettyStartDateTime() {
         return TimeUtils.prettifyTime(startDateTime);
     }
 
-    public String getEndDateTime() {
+    public String getPrettyEndDateTime() {
         return TimeUtils.prettifyTime(endDateTime);
+    }
+
+    public String getStartDateTime(){
+        return startDateTime;
+    }
+
+    public String getEndDateTime(){
+        return endDateTime;
     }
 
     public String getLocation() {

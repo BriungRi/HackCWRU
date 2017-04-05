@@ -219,7 +219,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             final Event event = events.get(position);
 
             holder.eventName.setText(event.getName());
-            holder.eventTime.setText(event.getStartDateTime());
+            holder.eventTime.setText(event.getPrettyStartDateTime());
             holder.eventDescription.setText(event.getDescription());
 
             if (event.isSaved()) {

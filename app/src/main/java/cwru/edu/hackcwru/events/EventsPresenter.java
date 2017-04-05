@@ -136,12 +136,14 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     }
 
     private static List<Event> sanityCheckEvents(EventList localEventList, EventList remoteEventList) {
-        List<Event> local = localEventList.getEvents();
         List<Event> remote = remoteEventList.getEvents();
+        if (localEventList != null) {
+            List<Event> local = localEventList.getEvents();
 
-        for (int i = 0; i < remote.size(); i++) {
-            if (i < local.size())
-                remote.get(i).setSaved(local.get(i).isSaved());
+            for (int i = 0; i < remote.size(); i++) {
+                if (i < local.size())
+                    remote.get(i).setSaved(local.get(i).isSaved());
+            }
         }
         return remote;
     }
