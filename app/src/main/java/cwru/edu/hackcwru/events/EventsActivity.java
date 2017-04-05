@@ -78,7 +78,7 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
 
-        if(FragmentUtils.fragmentsAreAllClosed())
+        if (FragmentUtils.fragmentsAreAllClosed())
             attachFragments();
     }
 
@@ -122,6 +122,9 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
                 break;
             case R.id.item_countdown:
                 FragmentUtils.showCountdownFragment(EventsActivity.this);
+                break;
+            case R.id.item_credits:
+                FragmentUtils.showCreditsFragment(EventsActivity.this);
                 break;
         }
 

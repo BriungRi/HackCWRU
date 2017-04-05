@@ -24,5 +24,11 @@
             android:checked="false"
             android:icon="@drawable/ic_alarm_black_24dp"
             android:title="@string/countdown_title" />
+
+        <item
+            android:id="@+id/item_credits"
+            android:checked="false"
+            android:icon="@drawable/ic_child_care_black_24dp"
+            android:title="@string/credits_title" />
     </group>
 </menu>

@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.announcements.AnnouncementsFragment;
 import cwru.edu.hackcwru.countdown.CountdownFragment;
+import cwru.edu.hackcwru.credits.CreditsFragment;
 import cwru.edu.hackcwru.events.EventsActivity;
-import cwru.edu.hackcwru.events.EventsFragment;
 import cwru.edu.hackcwru.maps.MapsFragment;
 
 public class FragmentUtils {
@@ -44,6 +44,7 @@ public class FragmentUtils {
         closeAnnouncementsFragment(activity);
         closeMapsFragment(activity);
         closeCountdownFragment(activity);
+        closeCreditsFragment(activity);
     }
 
     private static CountdownFragment countdownFragment;
@@ -88,7 +89,21 @@ public class FragmentUtils {
         announcementsFragment = null;
     }
 
+    private static CreditsFragment creditsFragment;
+
+    public static void showCreditsFragment(EventsActivity activity) {
+        if (creditsFragment == null) {
+            creditsFragment = CreditsFragment.newInstance();
+            showOverlayElement(activity, creditsFragment);
+        }
+    }
+
+    private static void closeCreditsFragment(EventsActivity activity) {
+        closeOverlayElement(activity, creditsFragment);
+        creditsFragment = null;
+    }
+
     public static boolean fragmentsAreAllClosed() {
-        return announcementsFragment == null && mapsFragment == null && countdownFragment == null;
+        return announcementsFragment == null && mapsFragment == null && countdownFragment == null && creditsFragment == null;
     }
 }

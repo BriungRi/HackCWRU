@@ -14,5 +14,13 @@
     <string name="maps_title">Map</string>
     <string name="announcements_title">Announcements</string>
     <string name="countdown_title">Countdown</string>
+    <string name="credits_title">Credits</string>
+
+    <!-- Credits -->
+    <string name="brian_description">If you want to learn about Android dev, go to his Android Development Workshop @ HackCWRU! Also, you can find him at brianvli.com </string>
+    <string name="dylan_description">If you liked the Countdown Page, you should also check out his awesome Android app \"The Jump Rope Tricktionary\".
+        \n\nFun fact: Dylan is a pro jump roper (you should ask him to show you his skills!!). </string>
+    <string name="anna_description">If you liked the maps or the nicely formatted time, you should check out Anna at https://www.annasedlackova.com.
+        \n\nFun fact: Anna builds rockets in her free time (she\'s a serious badass!!) </string>
 
 </resources>

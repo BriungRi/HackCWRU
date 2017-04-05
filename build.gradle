@@ -33,6 +33,7 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '25.1.0'
+    constraintLayoutVersion = '1.0.1'
     butterknifeVersion = '8.4.0'
     guavaVersion = '18.0'
     junitVersion = '4.12'
