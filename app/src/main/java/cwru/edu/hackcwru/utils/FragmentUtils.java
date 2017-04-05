@@ -10,10 +10,11 @@ import cwru.edu.hackcwru.announcements.AnnouncementsFragment;
 import cwru.edu.hackcwru.countdown.CountdownFragment;
 import cwru.edu.hackcwru.events.EventsActivity;
 import cwru.edu.hackcwru.events.EventsFragment;
+import cwru.edu.hackcwru.maps.MapsFragment;
 
 public class FragmentUtils {
 
-    private static void showOverlayElement(FragmentActivity activity, Fragment fragment){
+    private static void showOverlayElement(FragmentActivity activity, Fragment fragment) {
         showOverlayElement(activity, fragment, android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -25,7 +26,7 @@ public class FragmentUtils {
         transaction.commit();
     }
 
-    private static void closeOverlayElement(FragmentActivity activity, Fragment fragment){
+    private static void closeOverlayElement(FragmentActivity activity, Fragment fragment) {
         closeOverlayElement(activity, fragment, android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -39,12 +40,14 @@ public class FragmentUtils {
         }
     }
 
-    public static void closeAllOverlayElements(EventsActivity activity){
+    public static void closeAllOverlayElements(EventsActivity activity) {
         closeCountdownFragment(activity);
         closeAnnouncementsFragment(activity);
+        closeMapsFragment(activity);
     }
 
     private static CountdownFragment countdownFragment;
+
     public static void showCountdownFragment(EventsActivity activity) {
         if (countdownFragment == null) {
             countdownFragment = CountdownFragment.newInstance();
@@ -52,33 +55,35 @@ public class FragmentUtils {
         }
     }
 
-    public static void closeCountdownFragment(EventsActivity activity) {
+    private static void closeCountdownFragment(EventsActivity activity) {
         closeOverlayElement(activity, countdownFragment);
         countdownFragment = null;
     }
 
-    private static EventsFragment eventsFragment;
-    public static void showEventsFragment(EventsActivity activity) {
-        if (eventsFragment == null) {
-            eventsFragment = EventsFragment.newInstance();
-            showOverlayElement(activity, eventsFragment);
+    private static MapsFragment mapsFragment;
+
+    public static void showMapsFragment(EventsActivity activity) {
+        if (mapsFragment == null) {
+            mapsFragment = MapsFragment.newInstance();
+            showOverlayElement(activity, mapsFragment);
         }
     }
 
-    public static void closeEventsFragment(EventsActivity activity) {
-        closeOverlayElement(activity, eventsFragment);
-        eventsFragment = null;
+    private static void closeMapsFragment(EventsActivity activity) {
+        closeOverlayElement(activity, mapsFragment);
+        mapsFragment = null;
     }
 
     private static AnnouncementsFragment announcementsFragment;
-    public static void showAnnouncementsFragment(EventsActivity activity){
-        if(announcementsFragment == null){
+
+    public static void showAnnouncementsFragment(EventsActivity activity) {
+        if (announcementsFragment == null) {
             announcementsFragment = AnnouncementsFragment.newInstance();
             showOverlayElement(activity, announcementsFragment);
         }
     }
 
-    private static void closeAnnouncementsFragment(EventsActivity activity){
+    private static void closeAnnouncementsFragment(EventsActivity activity) {
         closeOverlayElement(activity, announcementsFragment);
         announcementsFragment = null;
     }

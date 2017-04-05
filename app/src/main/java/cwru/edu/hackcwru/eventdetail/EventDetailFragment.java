@@ -29,6 +29,8 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     TextView eventDetailTitle;
     @BindView(R.id.event_detail_time)
     TextView eventDetailTime;
+    @BindView(R.id.event_detail_location)
+    TextView eventDetailLocation;
     @BindView(R.id.event_detail_description)
     TextView eventDetailDescription;
 
@@ -70,6 +72,7 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
         if (event != null) {
             eventDetailTitle.setText(event.getName());
             eventDetailTime.setText(event.getStartDateTime() + " - " + event.getEndDateTime());
+            eventDetailLocation.setText(event.getLocation());
             eventDetailDescription.setText(event.getDescription());
         } else
             throw new NullPointerException();

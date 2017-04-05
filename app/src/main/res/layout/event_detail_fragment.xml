@@ -20,7 +20,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:text="12:00AM - 12:00PM" />
+
+    <cwru.edu.hackcwru.ui.OpenSansTextView
+        android:id="@+id/event_detail_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="2dp"
+        android:text="Leutner Pavillion" />
 
     <cwru.edu.hackcwru.ui.OpenSansTextView
         android:id="@+id/event_detail_description"

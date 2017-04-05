@@ -6,6 +6,7 @@ import cwru.edu.hackcwru.announcements.AnnouncementsPresenter;
 import cwru.edu.hackcwru.countdown.CountdownPresenter;
 import cwru.edu.hackcwru.data.LocalData;
 import cwru.edu.hackcwru.events.EventsPresenter;
+import cwru.edu.hackcwru.maps.MapsPresenter;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
 import dagger.Module;
 import dagger.Provides;
@@ -29,5 +30,11 @@ class PresenterModule {
     @Singleton
     AnnouncementsPresenter providesAnnouncementsPresenter(LocalData localData, HackCWRUServerCalls hackCWRUServerCalls) {
         return new AnnouncementsPresenter(localData, hackCWRUServerCalls);
+    }
+
+    @Provides
+    @Singleton
+    MapsPresenter providesMapsPresenter(HackCWRUServerCalls hackCWRUServerCalls) {
+        return new MapsPresenter(hackCWRUServerCalls);
     }
 }

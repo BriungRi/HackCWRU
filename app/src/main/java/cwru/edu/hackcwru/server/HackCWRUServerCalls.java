@@ -2,6 +2,7 @@ package cwru.edu.hackcwru.server;
 
 import cwru.edu.hackcwru.domain.AnnouncementList;
 import cwru.edu.hackcwru.domain.EventList;
+import cwru.edu.hackcwru.domain.MapList;
 import cwru.edu.hackcwru.firebase.DeviceTokenResponse;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -20,9 +21,12 @@ public interface HackCWRUServerCalls {
     @GET("announcements")
     Call<AnnouncementList> getAnnouncementsFromServer();
 
+    @GET("maps")
+    Call<MapList> getMapsFromServer();
+
     @FormUrlEncoded
-    @POST("notifications/register/{deviceToken}")
+    @POST("notifications/recipients")
     Call<DeviceTokenResponse> registerDevice(@Field("apikey") String apikey,
                                              @Field("os") String operatingSystem,
-                                             @Path("deviceToken") String deviceToken);
+                                             @Field("deviceToken") String deviceToken);
 }

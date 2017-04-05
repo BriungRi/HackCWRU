@@ -50,5 +50,6 @@ ext {
     firebaseVersion = '10.0.1'
     daggerVersion = '2.8'
     javaxAnnotationVersion = '1.0'
+    picassoVersion = '2.5.2'
 }
 

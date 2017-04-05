@@ -60,6 +60,9 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
 
+//    Square Picasso
+    compile "com.squareup.picasso:picasso:$rootProject.picassoVersion"
+
 //    GSON
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
 
