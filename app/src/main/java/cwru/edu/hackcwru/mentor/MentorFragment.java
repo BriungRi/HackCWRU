@@ -91,7 +91,19 @@ public class MentorFragment extends Fragment implements MentorContract.View {
     }
 
     @Override
-    public void showProgressDialog() {
-
+    public void showSuccessSnackbar() {
+        UIUtils.showSnackBar(getView(), this.getString(R.string.mentor_request_success_message));
     }
+
+    @Override
+    public void showFailureToast() {
+        UIUtils.toast(getContext(), this.getString(R.string.mentor_request_failure_message));
+    }
+
+    @Override
+    public void hideKeyboard() {
+        UIUtils.hideKeyboard(this.getActivity());
+    }
+
+
 }

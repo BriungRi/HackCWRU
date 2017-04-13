@@ -1,7 +1,6 @@
 package cwru.edu.hackcwru.mentor;
 
 import cwru.edu.hackcwru.data.LocalData;
-import cwru.edu.hackcwru.domain.Mentee;
 import cwru.edu.hackcwru.domain.MentorRequestResponse;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
 import cwru.edu.hackcwru.utils.Log;
@@ -43,15 +42,17 @@ public class MentorPresenter implements MentorContract.Presenter {
             public void onResponse(Call<MentorRequestResponse> call, Response<MentorRequestResponse> response) {
                 MentorRequestResponse mentorRequestResponse = response.body();
                 Log.d(LOG_TAG, mentorRequestResponse.toString());
+                mentorView.showSuccessSnackbar();
             }
 
             @Override
             public void onFailure(Call<MentorRequestResponse> call, Throwable t) {
-                Log.d(LOG_TAG, "Mentore Request Response failed");
+                Log.d(LOG_TAG, "Mentor Request Response failed");
+                mentorView.showFailureToast();
             }
         });
 
         mentorView.clearFields();
-
+        mentorView.hideKeyboard();
     }
 }

@@ -1,6 +1,7 @@
 package cwru.edu.hackcwru.utils;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -36,14 +38,15 @@ public class UIUtils {
     public static void showSnackBar(View view, String message) {
         snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
-        snackbar.dismiss();
     }
 
-    public static void displayPopup(Context context) {
+    public static PopupWindow getPopupWindow() {
         PopupWindow popupWindow = new PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             popupWindow.setEnterTransition(new Slide(Gravity.TOP));
+            popupWindow.setExitTransition(new Slide(Gravity.BOTTOM));
         }
+        return popupWindow;
     }
 
     public static boolean isConnected(EventsActivity activity) {
@@ -55,6 +58,13 @@ public class UIUtils {
         if (!isConnected)
             UIUtils.toast(activity, "No Internet Connection.");
         return isConnected;
+    }
 
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

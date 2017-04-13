@@ -8,7 +8,13 @@ public class MentorContract {
     interface View extends BaseView<MentorContract.Presenter>{
         void clearFields();
 
-        void showProgressDialog();
+        void showSuccessSnackbar();
+
+        void showFailureToast();
+
+        void hideKeyboard();
+
+
     }
 
     interface Presenter extends BasePresenter{

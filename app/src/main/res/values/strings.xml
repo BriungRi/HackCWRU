@@ -9,6 +9,9 @@
     <string name="no_events_text">There are no events here :/\nTry clicking the bookmark button on the bottom right.</string>
     <string name="no_announcements_text">There are no announcements here :|</string>
 
+    <string name="mentor_request_success_message">A mentor request has been successfully submitted.</string>
+    <string name="mentor_request_failure_message">Problem occurred while sending a mentor request.</string>
+
     <!-- Navigation Drawer -->
     <string name="schedule_title">Schedule</string>
     <string name="maps_title">Map</string>
