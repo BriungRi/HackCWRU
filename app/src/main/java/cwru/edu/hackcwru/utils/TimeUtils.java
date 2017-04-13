@@ -1,5 +1,8 @@
 package cwru.edu.hackcwru.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class TimeUtils {
 
     // TODO: Prettify this
@@ -59,5 +62,13 @@ public class TimeUtils {
         } else {
             return hour + ":" + hoursMinutesSeconds[MINUTE_INDEX] + "AM";
         }
+    }
+    private static long getEpochFromDateTime(String time) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return System.currentTimeMillis();
     }
 }

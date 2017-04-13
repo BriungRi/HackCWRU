@@ -21,6 +21,7 @@ import butterknife.Unbinder;
 import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Event;
+import cwru.edu.hackcwru.utils.TimeUtils;
 
 public class CountdownFragment extends Fragment implements CountdownContract.View {
     private final String LOG_TAG = "Countdown Fragment";
@@ -83,8 +84,7 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
     public void displayCountdown() {
         allEvents = this.presenter.getAllEvents();
         getNextAndLastEvents();
-
-        long currentTime = getEpochFromDateTime(lastEvent.getStartDateTime());
+        long currentTime = System.currentTimeMillis();
         final long lastEventStartTime = getEpochFromDateTime(lastEvent.getStartDateTime());
         final long nextEventStartTime = getEpochFromDateTime(nextEvent.getStartDateTime());
         final CountDownTimer countDownTimer = new CountDownTimer(nextEventStartTime - currentTime, 1000) {
@@ -117,19 +117,10 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
                 String.format("%02d", seconds);
     }
 
-    private static long getEpochFromDateTime(String time) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return System.currentTimeMillis();
-    }
-
     private void getNextAndLastEvents() {
         long currentTime = System.currentTimeMillis();
         for (int j = 0; j < allEvents.size(); j++) {
-            if (getEpochFromDateTime(allEvents.get(j).getStartDateTime()) > currentTime) {
+            if (TimeUtils.getEpochFromDateTime(allEvents.get(j).getStartDateTime()) > currentTime) {
                 nextEvent = allEvents.get(j);
                 if (j > 0) {
                     lastEvent = allEvents.get(j - 1);
