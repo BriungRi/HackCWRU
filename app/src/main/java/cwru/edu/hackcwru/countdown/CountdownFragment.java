@@ -89,8 +89,14 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
         allEvents = this.presenter.getAllEvents();
         getNextAndLastEvents();
         long currentTime = System.currentTimeMillis();
-        final long lastEventStartTime = getEpochFromDateTime(lastEvent.getStartDateTime());
         final long nextEventStartTime = getEpochFromDateTime(nextEvent.getStartDateTime());
+        final long lastEventStartTime;
+        if(lastEvent==nextEvent){
+            lastEventStartTime=nextEventStartTime-86400000;
+        }
+        else {
+            lastEventStartTime = getEpochFromDateTime(lastEvent.getStartDateTime());
+        }
         final CountDownTimer countDownTimer = new CountDownTimer(nextEventStartTime - currentTime, 1000) {
             @Override
             public void onTick(long l) {
@@ -132,7 +138,7 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
                 }
                 else{
                     nextEvent = allEvents.get(j);
-                    lastEvent = allEvents.get(0);
+                    lastEvent = nextEvent;
                 }
             }
         }
