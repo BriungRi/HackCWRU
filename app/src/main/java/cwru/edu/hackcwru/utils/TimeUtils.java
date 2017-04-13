@@ -2,39 +2,14 @@ package cwru.edu.hackcwru.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class TimeUtils {
 
-    // TODO: Prettify this
     public static String prettifyTime(String dateTime) {
-        String dateToDisplay = getDate(dateTime); //Friday/Saturday/Sunday
+        String dateToDisplay = getDayOfWeek(dateTime);
         String timeToDisplay = getTime(dateTime);
         return dateToDisplay + " " + timeToDisplay;
-    }
-
-    private static String getDate(String dateTime) {
-        if (dateTime != null) {
-            final int DATE_INDEX = 0;
-            final int DAY_INDEX = 2;
-            // TODO: Figure out a way to get rid of hard code
-            final String FRIDAY = "27";
-            final String SATURDAY = "28";
-            final String SUNDAY = "29";
-
-            String[] timeParts = dateTime.split(" ");
-            String date = timeParts[DATE_INDEX];
-
-            String day = date.split("-")[DAY_INDEX];
-            if (day.equals(FRIDAY))
-                day = "Friday";
-            else if (day.equals(SATURDAY))
-                day = "Saturday";
-            else if (day.equals(SUNDAY))
-                day = "Sunday";
-
-            return day;
-        }
-        return null;
     }
 
     private static String getTime(String dateTime) {
@@ -63,12 +38,44 @@ public class TimeUtils {
             return hour + ":" + hoursMinutesSeconds[MINUTE_INDEX] + "AM";
         }
     }
-    private static long getEpochFromDateTime(String time) {
+
+    public static long getEpochFromDateTime(String time) {
         try {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return System.currentTimeMillis();
+    }
+
+    public static String getDayOfWeek(String time) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
+            return getStringDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private static String getStringDayOfWeek(int dayOfWeek) {
+        switch (dayOfWeek) {
+            case Calendar.SUNDAY:
+                return "Sunday";
+            case Calendar.MONDAY:
+                return "Monday";
+            case Calendar.TUESDAY:
+                return "Tuesday";
+            case Calendar.WEDNESDAY:
+                return "Wednesday";
+            case Calendar.THURSDAY:
+                return "Thursday";
+            case Calendar.FRIDAY:
+                return "Friday";
+            case Calendar.SATURDAY:
+                return "Saturday";
+        }
+        return "";
     }
 }

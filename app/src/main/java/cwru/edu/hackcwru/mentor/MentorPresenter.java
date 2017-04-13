@@ -50,5 +50,8 @@ public class MentorPresenter implements MentorContract.Presenter {
                 Log.d(LOG_TAG, "Mentore Request Response failed");
             }
         });
+
+        mentorView.clearFields();
+
     }
 }
