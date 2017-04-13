@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,7 +22,10 @@ import butterknife.Unbinder;
 import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Event;
+import cwru.edu.hackcwru.utils.Log;
 import cwru.edu.hackcwru.utils.TimeUtils;
+
+import static cwru.edu.hackcwru.utils.TimeUtils.getEpochFromDateTime;
 
 public class CountdownFragment extends Fragment implements CountdownContract.View {
     private final String LOG_TAG = "Countdown Fragment";
@@ -85,15 +89,16 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
         allEvents = this.presenter.getAllEvents();
         getNextAndLastEvents();
         long currentTime = System.currentTimeMillis();
-        final long lastEventStartTime = TimeUtils.getEpochFromDateTime(lastEvent.getStartDateTime());
-        final long nextEventStartTime = TimeUtils.getEpochFromDateTime(nextEvent.getStartDateTime());
+        final long lastEventStartTime = getEpochFromDateTime(lastEvent.getStartDateTime());
+        final long nextEventStartTime = getEpochFromDateTime(nextEvent.getStartDateTime());
         final CountDownTimer countDownTimer = new CountDownTimer(nextEventStartTime - currentTime, 1000) {
             @Override
             public void onTick(long l) {
                 if (countdownProgress != null && countdownView != null) {
                     String currentDateTimeString = formatEpoch(l);
-                    int progress = (int) (100 * ((l * 1.0) / (nextEventStartTime - lastEventStartTime)));
-                    countdownProgress.setProgress(progress);
+                    double progress =100.0*((1.0*l)/(1.0*nextEventStartTime-lastEventStartTime));
+                    Log.d(LOG_TAG,"Progress="+progress);
+                    countdownProgress.setProgress(100-(int)progress);
                     countdownView.setText(currentDateTimeString);
                 }
             }
@@ -119,20 +124,19 @@ public class CountdownFragment extends Fragment implements CountdownContract.Vie
 
     private void getNextAndLastEvents() {
         long currentTime = System.currentTimeMillis();
-        for (int j = 0; j < allEvents.size(); j++) {
-            if (TimeUtils.getEpochFromDateTime(allEvents.get(j).getStartDateTime()) > currentTime) {
-                nextEvent = allEvents.get(j);
-                if (j > 0) {
+        for (int j = allEvents.size()-1; j >=0 ; j--) {
+            if (getEpochFromDateTime(allEvents.get(j).getStartDateTime()) > currentTime) {
+                if (j > 1) {
+                    nextEvent = allEvents.get(j);
                     lastEvent = allEvents.get(j - 1);
-                } else {
+                }
+                else{
+                    nextEvent = allEvents.get(j);
                     lastEvent = allEvents.get(0);
                 }
-            } else {
-                //TODO: these should be 0 but for testing keep them as 1 and 2
-                nextEvent = allEvents.get(1);
-                lastEvent = allEvents.get(0);
             }
         }
+
         nextEventName.setText(nextEvent.getName());
         nextEventDescription.setText(nextEvent.getDescription());
         nextEventTime.setText(nextEvent.getPrettyStartDateTime());

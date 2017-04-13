@@ -17,5 +17,5 @@
     <dimen name="event_detail_title_text_size">50sp</dimen>
     <dimen name="event_detail_description_text_size">25sp</dimen>
 
-    <dimen name="countdown_timer_text_size">75sp</dimen>
+    <dimen name="countdown_timer_text_size">50sp</dimen>
 </resources>
