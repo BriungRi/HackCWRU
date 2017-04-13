@@ -11,6 +11,7 @@ import cwru.edu.hackcwru.countdown.CountdownFragment;
 import cwru.edu.hackcwru.credits.CreditsFragment;
 import cwru.edu.hackcwru.events.EventsActivity;
 import cwru.edu.hackcwru.maps.MapsFragment;
+import cwru.edu.hackcwru.mentor.MentorFragment;
 
 public class FragmentUtils {
 
@@ -44,6 +45,7 @@ public class FragmentUtils {
         closeAnnouncementsFragment(activity);
         closeMapsFragment(activity);
         closeCountdownFragment(activity);
+        closeMentorFragment(activity);
         closeCreditsFragment(activity);
     }
 
@@ -89,6 +91,20 @@ public class FragmentUtils {
         announcementsFragment = null;
     }
 
+    private static MentorFragment mentorFragment;
+
+    public static void showMentorFragment(EventsActivity activity) {
+        if (mentorFragment == null) {
+            mentorFragment = MentorFragment.newInstance();
+            showOverlayElement(activity, mentorFragment);
+        }
+    }
+
+    private static void closeMentorFragment(EventsActivity activity) {
+        closeOverlayElement(activity, mentorFragment);
+        mentorFragment = null;
+    }
+
     private static CreditsFragment creditsFragment;
 
     public static void showCreditsFragment(EventsActivity activity) {
@@ -104,6 +120,6 @@ public class FragmentUtils {
     }
 
     public static boolean fragmentsAreAllClosed() {
-        return announcementsFragment == null && mapsFragment == null && countdownFragment == null && creditsFragment == null;
+        return announcementsFragment == null && mapsFragment == null && countdownFragment == null && mentorFragment == null && creditsFragment == null;
     }
 }

@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/next_event_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif-thin"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="Event Name"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/next_event_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="Event Description" />
-
-        <TextView
-            android:id="@+id/next_event_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="00:00" />
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/countdown_progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@drawable/circle_progress_bar_background_shape"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/circle_progress_bar" />
-
-
     <TextView
-        android:id="@+id/countdown_view"
+        android:id="@+id/next_event_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
-        android:text="00:00:00"
+        android:padding="8dp"
+        android:text="Event Name"
         android:textColor="@color/black"
-        android:textSize="@dimen/countdown_timer_text_size" />
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/next_event_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Event Description" />
+
+    <TextView
+        android:id="@+id/next_event_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="00:00" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/countdown_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_progress_bar_background_shape"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/circle_progress_bar" />
 
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/countdown_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:text="00:00:00"
+            android:textColor="@color/black"
+            android:textSize="@dimen/countdown_timer_text_size" />
+    </FrameLayout>
+
+
+</LinearLayout>

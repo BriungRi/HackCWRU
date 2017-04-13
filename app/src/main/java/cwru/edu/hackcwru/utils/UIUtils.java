@@ -19,7 +19,7 @@ public class UIUtils {
         toast.show();
     }
 
-    public static void cancelToast() {
+    private static void cancelToast() {
         if (toast != null)
             toast.cancel();
     }

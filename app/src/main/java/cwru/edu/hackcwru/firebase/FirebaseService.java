@@ -3,17 +3,30 @@ package cwru.edu.hackcwru.firebase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import javax.inject.Inject;
+
+import cwru.edu.hackcwru.HackCWRUApplication;
 import cwru.edu.hackcwru.R;
+import cwru.edu.hackcwru.data.LocalData;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
 import cwru.edu.hackcwru.utils.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FirebaseService extends FirebaseInstanceIdService {
     private final String LOG_TAG = "FirebaseService";
+
+    @Inject
+    HackCWRUServerCalls hackCWRUServerCalls;
+    @Inject
+    LocalData localData;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((HackCWRUApplication) getApplication()).getNetComponent().inject(this);
+    }
 
     @Override
     public void onTokenRefresh() {
@@ -21,12 +34,11 @@ public class FirebaseService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(LOG_TAG, "Refreshed token: " + refreshedToken);
 
-        sendRegistrationToServer(refreshedToken);
+        sendDeviceTokenToServer(refreshedToken);
+        localData.saveDeviceToken(refreshedToken);
     }
 
-    private void sendRegistrationToServer(String deviceToken) {
-        HackCWRUServerCalls hackCWRUServerCalls = getHackCWRUServerCalls();
-
+    private void sendDeviceTokenToServer(String deviceToken) {
         Call<DeviceTokenResponse> registerDevice = hackCWRUServerCalls.registerDevice(getString(R.string.HACKCWRU_API_KEY),
                 getString(R.string.operating_system),
                 deviceToken);
@@ -45,13 +57,5 @@ public class FirebaseService extends FirebaseInstanceIdService {
                 Log.d(LOG_TAG, "Error Registering Device");
             }
         });
-    }
-
-    private HackCWRUServerCalls getHackCWRUServerCalls() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(HackCWRUServerCalls.API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        return retrofit.create(HackCWRUServerCalls.class);
     }
 }

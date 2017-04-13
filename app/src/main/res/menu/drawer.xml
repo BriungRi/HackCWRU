@@ -26,6 +26,12 @@
             android:title="@string/countdown_title" />
 
         <item
+            android:id="@+id/item_mentor"
+            android:checked="false"
+            android:icon="@drawable/ic_touch_app_black_24dp"
+            android:title="@string/mentor_title" />
+
+        <item
             android:id="@+id/item_credits"
             android:checked="false"
             android:icon="@drawable/ic_child_care_black_24dp"

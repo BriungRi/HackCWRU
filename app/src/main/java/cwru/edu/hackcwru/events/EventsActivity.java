@@ -123,6 +123,9 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             case R.id.item_countdown:
                 FragmentUtils.showCountdownFragment(EventsActivity.this);
                 break;
+            case R.id.item_mentor:
+                FragmentUtils.showMentorFragment(EventsActivity.this);
+                break;
             case R.id.item_credits:
                 FragmentUtils.showCreditsFragment(EventsActivity.this);
                 break;

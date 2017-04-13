@@ -40,4 +40,14 @@ public class LocalData {
         String announementsListJson = gson.toJson(announcementsToSave);
         editor.putString(StringConstants.SAVE_ANNOUNCEMENTS_PREFERENCE, announementsListJson).apply();
     }
+
+    public void saveDeviceToken(String token){
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putString(StringConstants.SAVE_DEVICE_TOKEN_PREFERENCE, token).apply();
+    }
+
+    public String getDeviceToken(){
+        String deviceToken = sharedPreferences.getString(StringConstants.SAVE_DEVICE_TOKEN_PREFERENCE, "");
+        return deviceToken;
+    }
 }
