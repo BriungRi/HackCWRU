@@ -32,6 +32,12 @@
             android:title="@string/mentor_title" />
 
         <item
+            android:id="@+id/item_emergency"
+            android:checked="false"
+            android:icon="@drawable/ic_call_black_24dp"
+            android:title="@string/emergency_title" />
+
+        <item
             android:id="@+id/item_credits"
             android:checked="false"
             android:icon="@drawable/ic_child_care_black_24dp"

@@ -18,6 +18,7 @@
     <string name="announcements_title">Announcements</string>
     <string name="countdown_title">Countdown</string>
     <string name="mentor_title">Request a Mentor</string>
+    <string name="emergency_title">Emergency Contacts</string>
     <string name="credits_title">Credits</string>
 
     <!-- Credits -->
