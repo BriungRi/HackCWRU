@@ -29,7 +29,8 @@ public class MapsPresenter implements MapsContract.Presenter {
             @Override
             public void onResponse(Call<MapList> call, Response<MapList> response) {
                 List<Map> mapList = response.body().getMaps();
-                mapsView.loadMap(mapList.get(0).getImageURL());
+                mapsView.loadMap(mapList.get(1).getImageURL());
+                mapsView.setMapTitle(mapList.get(1).getName());
             }
 
             @Override

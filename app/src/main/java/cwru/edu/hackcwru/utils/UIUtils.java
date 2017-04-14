@@ -36,17 +36,8 @@ public class UIUtils {
     private static Snackbar snackbar;
 
     public static void showSnackBar(View view, String message) {
-        snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
+        snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         snackbar.show();
-    }
-
-    public static PopupWindow getPopupWindow() {
-        PopupWindow popupWindow = new PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            popupWindow.setEnterTransition(new Slide(Gravity.TOP));
-            popupWindow.setExitTransition(new Slide(Gravity.BOTTOM));
-        }
-        return popupWindow;
     }
 
     public static boolean isConnected(EventsActivity activity) {

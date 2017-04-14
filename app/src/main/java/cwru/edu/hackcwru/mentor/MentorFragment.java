@@ -80,6 +80,7 @@ public class MentorFragment extends Fragment implements MentorContract.View {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        UIUtils.hideKeyboard(getActivity());
         unbinder.unbind();
     }
 

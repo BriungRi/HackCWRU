@@ -8,8 +8,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/name_edit_text"
@@ -22,8 +22,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/topics_edit_text"
@@ -36,8 +36,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/location_edit_text"

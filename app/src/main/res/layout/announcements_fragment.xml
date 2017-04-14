@@ -25,7 +25,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="@dimen/no_events_view_padding"
-        android:text="@string/no_events_text"
+        android:text="@string/no_announcements_text"
         android:textColor="@android:color/darker_gray"
         android:visibility="gone" />
 </FrameLayout>

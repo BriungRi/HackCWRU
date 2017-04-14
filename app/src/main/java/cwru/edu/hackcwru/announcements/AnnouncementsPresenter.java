@@ -34,6 +34,7 @@ public class AnnouncementsPresenter implements AnnouncementsContract.Presenter {
 
     @Override
     public void loadAnnouncements() {
+        this.loadAnnouncementsFromLocal();
         this.loadAnnouncemntsFromRemote();
     }
 
@@ -56,6 +57,12 @@ public class AnnouncementsPresenter implements AnnouncementsContract.Presenter {
                 announcementsView.showAnnouncements(announcementList.getAnnouncements());
                 announcementsView.onRefreshFinish();
                 localData.saveAnnouncementsToLocal(announcementList);
+
+                if (announcementList.getAnnouncements().isEmpty()) {
+                    announcementsView.showNoAnnouncementsView();
+                } else {
+                    announcementsView.hideNoAnnouncementsView();
+                }
             }
 
             @Override

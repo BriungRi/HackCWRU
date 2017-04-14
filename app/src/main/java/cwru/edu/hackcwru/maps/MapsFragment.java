@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -30,8 +31,10 @@ public class MapsFragment extends Fragment implements MapsContract.View {
     @Inject
     MapsPresenter presenter;
 
-    @BindView(R.id.map_image_view)
-    ImageView mapView;
+    @BindView(R.id.maps_image_view)
+    ImageView mapsView;
+    @BindView(R.id.maps_title)
+    TextView mapsTextView;
 
     public MapsFragment() {
         // Empty Constructor
@@ -75,6 +78,11 @@ public class MapsFragment extends Fragment implements MapsContract.View {
     @Override
     public void loadMap(String imageUrl) {
         Log.d(LOG_TAG, imageUrl);
-        Picasso.with(getContext()).load(imageUrl).into(mapView);
+        Picasso.with(getContext()).load(imageUrl).into(mapsView);
+    }
+
+    @Override
+    public void setMapTitle(String mapTitle) {
+        this.mapsTextView.setText(mapTitle);
     }
 }

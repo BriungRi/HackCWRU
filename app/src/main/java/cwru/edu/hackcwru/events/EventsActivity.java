@@ -77,9 +77,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         // Default selected item to schedule
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
-
-        if (FragmentUtils.fragmentsAreAllClosed())
-            attachFragments();
     }
 
     @Override
@@ -102,10 +99,16 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        attachFragments();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Don't do anything if this is the current item
         if (item.isChecked())
-            return true;
+            return false;
 
         mainToolbar.setTitle(item.getTitle());
 

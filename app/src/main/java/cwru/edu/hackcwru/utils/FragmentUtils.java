@@ -10,6 +10,7 @@ import cwru.edu.hackcwru.announcements.AnnouncementsFragment;
 import cwru.edu.hackcwru.countdown.CountdownFragment;
 import cwru.edu.hackcwru.credits.CreditsFragment;
 import cwru.edu.hackcwru.events.EventsActivity;
+import cwru.edu.hackcwru.events.EventsFragment;
 import cwru.edu.hackcwru.maps.MapsFragment;
 import cwru.edu.hackcwru.mentor.MentorFragment;
 

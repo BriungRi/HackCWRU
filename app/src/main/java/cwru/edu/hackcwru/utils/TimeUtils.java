@@ -78,4 +78,18 @@ public class TimeUtils {
         }
         return "";
     }
+
+    public static boolean isFutureTime(String time) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
+
+            Calendar today = Calendar.getInstance();
+            today.add(Calendar.DATE, 2);
+            return calendar.compareTo(today) > 0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -30,6 +30,7 @@ import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Event;
 import cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout;
 import cwru.edu.hackcwru.utils.Log;
+import cwru.edu.hackcwru.utils.TimeUtils;
 import cwru.edu.hackcwru.utils.UIUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -163,8 +164,8 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     @Override
-    public void updateBookmarkButtonBackgroundResource(int reosurceId) {
-        showBookMarkedItemsButton.setImageResource(reosurceId);
+    public void updateBookmarkButtonBackgroundResource(int resourceId) {
+        showBookMarkedItemsButton.setImageResource(resourceId);
     }
 
     public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {

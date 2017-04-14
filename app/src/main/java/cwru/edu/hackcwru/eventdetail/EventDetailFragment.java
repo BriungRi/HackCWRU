@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -32,6 +35,8 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     TextView eventDetailLocation;
     @BindView(R.id.event_detail_description)
     TextView eventDetailDescription;
+    @BindView(R.id.event_detail_map)
+    ImageView eventDetailMap;
 
     private Unbinder unbinder;
 
@@ -81,4 +86,11 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
         } else
             throw new NullPointerException();
     }
+
+    @Override
+    public void populateMap(String imageUrl) {
+        Picasso.with(getContext()).load(imageUrl).into(eventDetailMap);
+    }
+
+
 }

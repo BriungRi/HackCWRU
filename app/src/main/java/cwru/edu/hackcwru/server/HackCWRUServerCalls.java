@@ -15,7 +15,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface HackCWRUServerCalls {
-
     String API_BASE_URL = "https://hack-cwru.com/api/v1/";
 
     @GET("events")
@@ -28,7 +27,7 @@ public interface HackCWRUServerCalls {
     Call<MapList> getMapsFromServer();
 
     @FormUrlEncoded
-    @POST("notifications/recipients")
+    @POST("notification/recipients")
     Call<DeviceTokenResponse> registerDevice(@Field("apikey") String apikey,
                                              @Field("os") String operatingSystem,
                                              @Field("deviceToken") String deviceToken);

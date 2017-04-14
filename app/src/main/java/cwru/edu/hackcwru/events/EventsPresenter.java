@@ -9,6 +9,8 @@ import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Event;
 import cwru.edu.hackcwru.domain.EventList;
 import cwru.edu.hackcwru.data.LocalData;
+import cwru.edu.hackcwru.domain.Map;
+import cwru.edu.hackcwru.domain.MapList;
 import cwru.edu.hackcwru.eventdetail.EventDetailContract;
 import cwru.edu.hackcwru.server.HackCWRUServerCalls;
 import cwru.edu.hackcwru.utils.Log;
@@ -40,6 +42,7 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     @Override
     public void start() {
         loadEvents();
+        saveMaps();
     }
 
     @Override
@@ -55,6 +58,14 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     @Override
     public void openEventDetails(@NonNull Event event) {
         eventDetailView.populateEvent(event);
+        MapList mapList;
+        if ((mapList = localData.getMapListFromLocal()) != null) {
+            for(Map map : mapList.getMaps()){
+                if(map.getLocation().equals(event.getLocation())){
+                    eventDetailView.populateMap(map.getImageURL());
+                }
+            }
+        }
     }
 
     @Override
@@ -123,6 +134,23 @@ public class EventsPresenter implements EventsContract.Presenter, EventDetailCon
     public void showAllEvents() {
         eventsView.updateBookmarkButtonBackgroundResource(R.drawable.ic_bookmark_border_white_24dp);
         processEvents(allEvents);
+    }
+
+    @Override
+    public void saveMaps() {
+        Call<MapList> mapListCall = hackCWRUServerCalls.getMapsFromServer();
+        mapListCall.enqueue(new Callback<MapList>() {
+            @Override
+            public void onResponse(Call<MapList> call, Response<MapList> response) {
+                MapList mapList = response.body();
+                localData.saveMapsToLocal(mapList);
+            }
+
+            @Override
+            public void onFailure(Call<MapList> call, Throwable t) {
+                Log.d(LOG_TAG, "Map Server Call failed");
+            }
+        });
     }
 
     private void processEvents(List<Event> events) {

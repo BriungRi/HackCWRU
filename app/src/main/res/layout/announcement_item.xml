@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_item_view"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="90dip"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -27,8 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         android:ellipsize="end"
-        android:maxEms="10"
-        android:maxLines="1"
+        android:maxLines="3"
         android:textSize="@dimen/list_event_description_text_size" />
 
     <cwru.edu.hackcwru.ui.OpenSansTextView
