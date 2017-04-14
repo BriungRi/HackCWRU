@@ -1,6 +1,5 @@
 package cwru.edu.hackcwru.events;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -31,6 +30,7 @@ import cwru.edu.hackcwru.R;
 import cwru.edu.hackcwru.domain.Event;
 import cwru.edu.hackcwru.ui.ScrollChildSwipeRefreshLayout;
 import cwru.edu.hackcwru.utils.Log;
+import cwru.edu.hackcwru.utils.TimeUtils;
 import cwru.edu.hackcwru.utils.UIUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -100,7 +100,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
         eventList.setHasFixedSize(true);
         eventList.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventList.setAdapter(eventListAdapter);
-        eventList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        eventList.addItemDecoration(new SimpleDividerItemDecoration());
 
         swipeRefreshLayout.setScrollUpChild(eventList);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -164,8 +164,8 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     }
 
     @Override
-    public void updateBookmarkButtonBackgroundResource(int reosurceId) {
-        showBookMarkedItemsButton.setImageResource(reosurceId);
+    public void updateBookmarkButtonBackgroundResource(int resourceId) {
+        showBookMarkedItemsButton.setImageResource(resourceId);
     }
 
     public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
@@ -201,11 +201,11 @@ public class EventsFragment extends Fragment implements EventsContract.View {
 
         public void replaceEvents(List<Event> events) {
             setEvents(events);
-            notifyDataSetChanged();
         }
 
         private void setEvents(List<Event> events) {
             this.events = checkNotNull(events);
+            notifyDataSetChanged();
         }
 
         @Override
@@ -220,7 +220,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             final Event event = events.get(position);
 
             holder.eventName.setText(event.getName());
-            holder.eventTime.setText(event.getDateTimeToDisplay());
+            holder.eventTime.setText(event.getPrettyStartDateTime());
             holder.eventDescription.setText(event.getDescription());
 
             if (event.isSaved()) {
@@ -230,11 +230,11 @@ public class EventsFragment extends Fragment implements EventsContract.View {
             }
 
             holder.item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    eventItemListener.onTaskClick(event);
-                }
-            }
+                                               @Override
+                                               public void onClick(View v) {
+                                                   eventItemListener.onTaskClick(event);
+                                               }
+                                           }
             );
 
             holder.saveButton.setOnClickListener(new View.OnClickListener() {
@@ -242,8 +242,10 @@ public class EventsFragment extends Fragment implements EventsContract.View {
                 public void onClick(View v) {
                     if (event.isSaved()) {
                         holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp);
+                        event.setSaved(false);
                     } else {
                         holder.saveButton.setBackgroundResource(R.drawable.ic_bookmark_black_24dp);
+                        event.setSaved(true);
                     }
                     eventItemListener.onTaskSave(event);
                 }
@@ -259,7 +261,7 @@ public class EventsFragment extends Fragment implements EventsContract.View {
     private class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
         private Drawable mDivider;
 
-        public SimpleDividerItemDecoration(Context context) {
+        public SimpleDividerItemDecoration() {
             mDivider = ResourcesCompat.getDrawable(getResources(), R.drawable.line_divider, null);
         }
 

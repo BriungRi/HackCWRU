@@ -1,7 +1,7 @@
 package cwru.edu.hackcwru.utils;
 
 public class Log {
-    private static final boolean LOG = true;
+    private static final boolean LOG = false;
 
     public static void i(String tag, String string) {
         if (LOG) android.util.Log.i(tag, string);

@@ -22,7 +22,7 @@ public interface EventsContract {
 
         void showOnEventSavedSnackback(String message);
 
-        void updateBookmarkButtonBackgroundResource(int reosurceId);
+        void updateBookmarkButtonBackgroundResource(int resourceId);
     }
 
     interface Presenter extends BasePresenter {
@@ -41,6 +41,8 @@ public interface EventsContract {
         void showSavedEvents();
 
         void showAllEvents();
+
+        void saveMaps();
     }
 
 }

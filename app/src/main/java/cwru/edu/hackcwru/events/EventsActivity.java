@@ -1,6 +1,8 @@
 package cwru.edu.hackcwru.events;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -77,8 +79,6 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
         // Default selected item to schedule
         this.navigationView.getMenu().getItem(0).setChecked(true);
         this.navigationView.setNavigationItemSelectedListener(this);
-
-        attachFragments();
     }
 
     @Override
@@ -101,18 +101,19 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        attachFragments();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Don't do anything if this is the current item
         if (item.isChecked())
-            return true;
-
-        if (item.getItemId() == R.id.item_maps) {
-            UIUtils.toast(this, "Currently unavailable.");
-            item.setChecked(false);
             return false;
-        }
 
-        mainToolbar.setTitle(item.getTitle());
+        if (item.getItemId() != R.id.item_emergency)
+            mainToolbar.setTitle(item.getTitle());
 
         FragmentUtils.closeAllOverlayElements(EventsActivity.this);
         switch (item.getItemId()) {
@@ -120,12 +121,22 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
                 attachFragments();
                 break;
             case R.id.item_maps:
+                FragmentUtils.showMapsFragment(EventsActivity.this);
                 break;
             case R.id.item_announcements:
                 FragmentUtils.showAnnouncementsFragment(EventsActivity.this);
                 break;
             case R.id.item_countdown:
                 FragmentUtils.showCountdownFragment(EventsActivity.this);
+                break;
+            case R.id.item_mentor:
+                FragmentUtils.showMentorFragment(EventsActivity.this);
+                break;
+            case R.id.item_emergency:
+                openEmergencyContactsPage();
+                break;
+            case R.id.item_credits:
+                FragmentUtils.showCreditsFragment(EventsActivity.this);
                 break;
         }
 
@@ -168,5 +179,10 @@ public class EventsActivity extends AppCompatActivity implements NavigationView.
             eventDetailFragment = EventDetailFragment.newInstance();
             ActivityUtils.addFragmentToActivity(fragmentManager, eventDetailFragment, R.id.right_drawer);
         }
+    }
+
+    private void openEmergencyContactsPage() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://hack.cwru.edu/#contact"));
+        startActivity(browserIntent);
     }
 }

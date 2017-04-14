@@ -1,6 +1,9 @@
 package cwru.edu.hackcwru.countdown;
 
+import java.util.List;
+
 import cwru.edu.hackcwru.data.LocalData;
+import cwru.edu.hackcwru.domain.Event;
 
 public class CountdownPresenter implements CountdownContract.Presenter {
 
@@ -20,5 +23,9 @@ public class CountdownPresenter implements CountdownContract.Presenter {
     @Override
     public void setCountdownView(CountdownContract.View countdownView) {
         this.countdownView = countdownView;
+    }
+
+    public List<Event> getAllEvents(){
+        return localData.getEventsFromLocal().getEvents();
     }
 }

@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 
 import cwru.edu.hackcwru.domain.AnnouncementList;
 import cwru.edu.hackcwru.domain.EventList;
+import cwru.edu.hackcwru.domain.Map;
+import cwru.edu.hackcwru.domain.MapList;
 import cwru.edu.hackcwru.utils.StringConstants;
 
 public class LocalData {
@@ -37,7 +39,28 @@ public class LocalData {
 
     public void saveAnnouncementsToLocal(AnnouncementList announcementsToSave) {
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
-        String announementsListJson = gson.toJson(announcementsToSave);
-        editor.putString(StringConstants.SAVE_ANNOUNCEMENTS_PREFERENCE, announementsListJson).apply();
+        String announcementsListJson = gson.toJson(announcementsToSave);
+        editor.putString(StringConstants.SAVE_ANNOUNCEMENTS_PREFERENCE, announcementsListJson).apply();
+    }
+
+    public void saveDeviceToken(String token) {
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putString(StringConstants.SAVE_DEVICE_TOKEN_PREFERENCE, token).apply();
+    }
+
+    public String getDeviceToken() {
+        String deviceToken = sharedPreferences.getString(StringConstants.SAVE_DEVICE_TOKEN_PREFERENCE, "");
+        return deviceToken;
+    }
+
+    public void saveMapsToLocal(MapList mapList) {
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        String mapMetaDataAsString = gson.toJson(mapList);
+        editor.putString(StringConstants.SAVE_MAP_DATA_TOKEN_PREFERENCE, mapMetaDataAsString).apply();
+    }
+
+    public MapList getMapListFromLocal() {
+        String mapMetaDataAsString = sharedPreferences.getString(StringConstants.SAVE_MAP_DATA_TOKEN_PREFERENCE, null);
+        return gson.fromJson(mapMetaDataAsString, MapList.class);
     }
 }

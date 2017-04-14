@@ -17,10 +17,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|top"
-        android:text="Event Name"
+        android:ellipsize="end"
+        android:maxEms="8"
+        android:maxLines="1"
         android:textColor="@color/black"
-        android:textSize="@dimen/list_event_name_text_size"
-        android:visibility="visible" />
+        android:textSize="@dimen/list_event_name_text_size" />
 
     <cwru.edu.hackcwru.ui.OpenSansTextView
         android:id="@+id/list_event_description"
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         android:ellipsize="end"
-        android:maxEms="10"
+        android:maxEms="15"
         android:maxLines="1"
         android:textSize="@dimen/list_event_description_text_size" />
 
@@ -38,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
         android:layout_marginTop="3dp"
-        android:text="12:00 AM - 1:00AM"
+        android:gravity="center"
         android:textColor="@android:color/darker_gray"
         android:textSize="@dimen/list_event_time_text_size" />
 

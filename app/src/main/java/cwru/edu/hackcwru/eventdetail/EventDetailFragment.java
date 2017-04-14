@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -28,8 +31,12 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     TextView eventDetailTitle;
     @BindView(R.id.event_detail_time)
     TextView eventDetailTime;
+    @BindView(R.id.event_detail_location)
+    TextView eventDetailLocation;
     @BindView(R.id.event_detail_description)
     TextView eventDetailDescription;
+    @BindView(R.id.event_detail_map)
+    ImageView eventDetailMap;
 
     private Unbinder unbinder;
 
@@ -68,8 +75,8 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
     public void populateEvent(Event event) {
         if (event != null) {
             eventDetailTitle.setText(event.getName());
-            // TODO: Prettify the times
-            eventDetailTime.setText(event.getStartDateTime() + " - " + event.getEndDateTime());
+            eventDetailTime.setText(event.getPrettyStartDateTime() + " - " + event.getPrettyEndDateTime());
+            eventDetailLocation.setText(event.getLocation());
             eventDetailDescription.setText(event.getDescription());
         } else
             throw new NullPointerException();
@@ -79,4 +86,11 @@ public class EventDetailFragment extends Fragment implements EventDetailContract
         } else
             throw new NullPointerException();
     }
+
+    @Override
+    public void populateMap(String imageUrl) {
+        Picasso.with(getContext()).load(imageUrl).into(eventDetailMap);
+    }
+
+
 }

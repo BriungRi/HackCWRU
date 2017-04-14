@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_item_view"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="90dip"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -17,7 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|top"
-        android:text="Title"
         android:textColor="@color/black"
         android:textSize="@dimen/list_event_name_text_size"
         android:visibility="visible" />
@@ -28,8 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         android:ellipsize="end"
-        android:maxEms="10"
-        android:maxLines="1"
+        android:maxLines="3"
         android:textSize="@dimen/list_event_description_text_size" />
 
     <cwru.edu.hackcwru.ui.OpenSansTextView
@@ -38,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
         android:layout_marginTop="3dp"
-        android:text="12:00 AM - 1:00AM"
         android:textColor="@android:color/darker_gray"
         android:textSize="@dimen/list_event_time_text_size" />
 
